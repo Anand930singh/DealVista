@@ -1,8 +1,14 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { couponAPI } from "../../services/api"
 import "./couponform.css"
 
 export function CouponForm() {
+  const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
+  const [submitSuccess, setSubmitSuccess] = useState(false)
   const [formData, setFormData] = useState({
     proofScreenshotUrl: "",
     code: "",
@@ -75,7 +81,7 @@ export function CouponForm() {
     setToasts((prev) => prev.filter((toast) => toast.id !== id))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
     // Field name to user-friendly label mapping
@@ -130,13 +136,69 @@ export function CouponForm() {
       return
     }
 
-    // Clear image error if all fields are valid
-    setImageError("")
-
     // Clear any previous errors
     setImageError("")
-    console.log("Form submitted:", formData)
-    // Handle form submission
+    setSubmitError("")
+    setIsSubmitting(true)
+
+    try {
+      // Prepare coupon data for API
+      const couponPayload = {
+        code: formData.code,
+        title: formData.title,
+        description: formData.description || "",
+        platform: formData.platform,
+        category: formData.category,
+        discountType: formData.discountType,
+        discountValue: formData.discountValue ? parseFloat(formData.discountValue) : null,
+        minOrderValue: formData.minOrderValue ? parseFloat(formData.minOrderValue) : null,
+        maxDiscountValue: formData.maxDiscountValue ? parseFloat(formData.maxDiscountValue) : null,
+        terms: formData.terms || "",
+        validFrom: formData.validFrom,
+        validTill: formData.validTill,
+        requiresUniqueUser: formData.requiresUniqueUser,
+        usageType: formData.usageType,
+        geoRestriction: formData.geoRestriction || "",
+        proofScreenshotUrl: formData.proofScreenshotUrl,
+      }
+
+      // Call API to list coupon
+      await couponAPI.listCoupon(couponPayload)
+      
+      setSubmitSuccess(true)
+      showToast("Coupon listed successfully!")
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setFormData({
+          proofScreenshotUrl: "",
+          code: "",
+          title: "",
+          description: "",
+          platform: "",
+          category: "",
+          discountType: "",
+          discountValue: "",
+          minOrderValue: "",
+          maxDiscountValue: "",
+          terms: "",
+          validFrom: "",
+          validTill: "",
+          requiresUniqueUser: false,
+          usageType: "single-use",
+          geoRestriction: "",
+        })
+        setImagePreview(null)
+        setSubmitSuccess(false)
+        // Optionally redirect to browse page
+        // navigate("/browse")
+      }, 2000)
+    } catch (error) {
+      setSubmitError(error.message || "Failed to list coupon. Please try again.")
+      showToast(error.message || "Failed to list coupon. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const platforms = [

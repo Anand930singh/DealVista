@@ -65,6 +65,29 @@
   flex-shrink: 0;
 }
 
+/* Error Message */
+.auth-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.auth-error svg {
+  width: 20px;
+  height: 20px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
 /* Auth Card */
 .auth-card {
   width: 100%;

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
+import { authAPI } from "../../services/api"
 import "./auth.css"
 
 export default function AuthForm() {
@@ -55,22 +56,48 @@ export default function AuthForm() {
     setErrors({})
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      // Create user object (in real app, this would come from API)
+    try {
+      const response = await authAPI.signin(loginEmail, loginPassword)
+      
+      // Store user data with token
       const userData = {
-        email: loginEmail,
-        name: loginEmail.split("@")[0], // Simple name extraction
-        id: Date.now().toString(),
+        id: response.id,
+        email: response.email,
+        name: response.fullName,
+        token: response.token,
       }
+      
       login(userData)
       setSuccess("Login successful! Redirecting...")
+      
       // Redirect to the page user was trying to access, or home
       setTimeout(() => {
         navigate(from, { replace: true })
       }, 1000)
-    }, 1500)
+    } catch (error) {
+      setIsLoading(false)
+      const errorMessage = error.message || "Login failed. Please try again."
+      
+      // Check for specific error types
+      if (errorMessage.includes("connect") || errorMessage.includes("CORS")) {
+        setErrors({ 
+          general: "Cannot connect to server. Please ensure the backend is running on http://localhost:8080"
+        })
+      } else if (errorMessage.includes("403") || errorMessage.includes("Forbidden") || errorMessage.includes("Access Denied")) {
+        setErrors({ 
+          general: "Access denied. Please check if the backend security configuration allows this request."
+        })
+      } else if (errorMessage.includes("password") || errorMessage.includes("unauthorized") || errorMessage.includes("401")) {
+        setErrors({ 
+          loginPassword: "Invalid email or password",
+          general: ""
+        })
+      } else {
+        setErrors({ 
+          general: errorMessage
+        })
+      }
+    }
   }
 
   const handleSignup = async (e) => {
@@ -107,22 +134,44 @@ export default function AuthForm() {
     setErrors({})
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const response = await authAPI.signup(fullName, signupEmail, signupPassword)
+      
       // Auto-login after signup
       const userData = {
-        email: signupEmail,
-        name: fullName,
-        id: Date.now().toString(),
+        id: response.id,
+        email: response.email,
+        name: response.fullName,
+        token: response.token,
       }
+      
       login(userData)
       setSuccess("Account created successfully! Redirecting...")
+      
       // Redirect to the page user was trying to access, or home
       setTimeout(() => {
         navigate(from, { replace: true })
       }, 1000)
-    }, 1500)
+    } catch (error) {
+      setIsLoading(false)
+      const errorMessage = error.message || "Signup failed. Please try again."
+      
+      // Check for specific error types
+      if (errorMessage.includes("connect") || errorMessage.includes("CORS")) {
+        setErrors({ 
+          general: "Cannot connect to server. Please ensure the backend is running on http://localhost:8080"
+        })
+      } else if (errorMessage.includes("email") || errorMessage.includes("exists")) {
+        setErrors({ 
+          signupEmail: errorMessage,
+          general: ""
+        })
+      } else {
+        setErrors({ 
+          general: errorMessage
+        })
+      }
+    }
   }
 
   const handleGoogleAuth = () => {
@@ -176,6 +225,18 @@ export default function AuthForm() {
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
             {success}
+          </div>
+        )}
+
+        {/* Error Message */}
+        {errors.general && (
+          <div className="auth-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {errors.general}
           </div>
         )}
 
