@@ -1,0 +1,89 @@
+# ==================== BACKEND SENSITIVE FILES ====================
+
+# Application properties with secrets (development)
+backend/src/main/resources/application.properties
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# Dependencies
+backend/.gradle/
+gradle/
+
+# Logs
+*.log
+logs/
+
+# ==================== FRONTEND SENSITIVE FILES ====================
+
+# Node modules
+frontend/node_modules/
+node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Environment files
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# IDE
+frontend/.idea/
+frontend/.vscode/
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ==================== DATABASE FILES ====================
+
+# Database backups
+*.sql
+*.db
+*.sqlite
+
+# ==================== DEPLOYMENT SECRETS ====================
+
+# Never commit actual .env files
+.env
+.env.production
+.env.staging
+
+# ==================== TEMPORARY FILES ====================
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.bak
+
+# Compiled files
+*.class
+*.jar
+*.war
