@@ -20,6 +20,7 @@ public record CouponResponseDto(
         BigDecimal maxDiscountValue,
         LocalDate validFrom,
         LocalDate validTill,
+        String terms,
         Boolean requiresUniqueUser,
         String usageType,
         String geoRestriction,

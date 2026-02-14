@@ -31,10 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (path == null) {
             return false;
         }
-        // Skip filter for all auth endpoints
-        return path.startsWith("/api/auth/") || 
-               path.equals("/api/auth/signin") || 
-               path.equals("/api/auth/signup");
+        // Skip filter for auth endpoints (with or without context path /api)
+        return path.startsWith("/api/auth/") || path.startsWith("/auth/") ||
+               path.equals("/api/auth/signin") || path.equals("/auth/signin") ||
+               path.equals("/api/auth/signup") || path.equals("/auth/signup");
     }
 
     @Override

@@ -1,7 +1,11 @@
 import "./browsecoupon.css"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
+import { CouponDetailModal } from "../../components/CouponDetailModal/CouponDetailModal"
+import { useAuth } from "../../contexts/AuthContext"
+import { useToast } from "../../components/Toast/Toast"
+import { couponAPI } from "../../services/api"
 import {
   Search,
   Filter,
@@ -23,104 +27,70 @@ const categories = ["All Categories", "Food", "Shopping", "Travel", "Recharge", 
 const discountTypes = ["All Types", "Flat Discount", "Percentage", "Cashback", "BOGO"]
 const sortOptions = ["Latest", "Expiring Soon", "Most Popular"]
 
-const dummyCoupons = [
-  {
-    id: 1,
-    platform: "Swiggy",
-    title: "Flat ₹120 OFF on Orders Above ₹499",
-    category: "Food",
-    type: "Flat Discount",
-    verified: true,
-    successRate: 94,
-    redeemCost: 10,
-    validity: "Expires in 2 days",
-    usersRedeemed: 24,
-  },
-  {
-    id: 2,
-    platform: "Amazon",
-    title: "10% Cashback on Electronics Orders",
-    category: "Shopping",
-    type: "Cashback",
-    verified: true,
-    successRate: 89,
-    redeemCost: 15,
-    validity: "Valid till 15 Feb 2026",
-    usersRedeemed: 156,
-  },
-  {
-    id: 3,
-    platform: "PhonePe",
-    title: "₹50 Cashback on First Recharge",
-    category: "Recharge",
-    type: "Cashback",
-    verified: true,
-    successRate: 97,
-    redeemCost: 5,
-    validity: "Expires in 5 days",
-    usersRedeemed: 342,
-  },
-  {
-    id: 4,
-    platform: "Zomato",
-    title: "Buy 1 Get 1 Free on Selected Restaurants",
-    category: "Food",
-    type: "BOGO",
-    verified: true,
-    successRate: 91,
-    redeemCost: 20,
-    validity: "Valid till 28 Jan 2026",
-    usersRedeemed: 89,
-  },
-  {
-    id: 5,
-    platform: "GPay",
-    title: "₹100 Cashback on Bill Payments Above ₹500",
-    category: "Recharge",
-    type: "Cashback",
-    verified: false,
-    successRate: 85,
-    redeemCost: 10,
-    validity: "Expires in 7 days",
-    usersRedeemed: 67,
-  },
-  {
-    id: 6,
-    platform: "Flipkart",
-    title: "20% OFF on Fashion & Apparel",
-    category: "Shopping",
-    type: "Percentage",
-    verified: true,
-    successRate: 92,
-    redeemCost: 12,
-    validity: "Valid till 10 Feb 2026",
-    usersRedeemed: 203,
-  },
-  {
-    id: 7,
-    platform: "Myntra",
-    title: "Flat ₹300 OFF on Orders Above ₹1499",
-    category: "Shopping",
-    type: "Flat Discount",
-    verified: true,
-    successRate: 88,
-    redeemCost: 15,
-    validity: "Expires in 4 days",
-    usersRedeemed: 178,
-  },
-  {
-    id: 8,
-    platform: "Amazon",
-    title: "15% OFF on Prime Subscription",
-    category: "Subscription",
-    type: "Percentage",
-    verified: true,
-    successRate: 96,
-    redeemCost: 25,
-    validity: "Valid till 20 Feb 2026",
-    usersRedeemed: 412,
-  },
-]
+function formatDate(dateStr) {
+  if (!dateStr) return "N/A"
+  try {
+    const d = new Date(dateStr)
+    return isNaN(d.getTime()) ? dateStr : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+  } catch {
+    return dateStr
+  }
+}
+
+function capitalize(s) {
+  if (!s) return ""
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()
+}
+
+/** Map API coupon to card shape for the grid */
+function toCard(c) {
+  const platformDisplay = capitalize(c.platform)
+  const categoryDisplay = capitalize(c.category)
+  const typeDisplay =
+    c.discountType === "FLAT" ? "Flat Discount" : c.discountType === "PERCENTAGE" ? "Percentage" : c.discountType || "—"
+  const validity = c.validTill ? `Valid till ${formatDate(c.validTill)}` : "Check terms"
+  return {
+    // Basic fields
+    id: c.id,
+    title: c.title,
+    description: c.description,
+    code: c.code,
+    platform: platformDisplay,
+    platformRaw: (c.platform || "").toLowerCase(),
+    category: categoryDisplay,
+    categoryRaw: (c.category || "").toLowerCase(),
+    type: typeDisplay,
+    typeRaw: (c.discountType || "").toLowerCase(),
+    
+    // Discount fields
+    discountType: c.discountType,
+    discountValue: c.discountValue,
+    minOrderValue: c.minOrderValue,
+    maxDiscountValue: c.maxDiscountValue,
+    
+    // Validity fields
+    validFrom: c.validFrom,
+    validTill: c.validTill,
+    validity,
+    
+    // Terms and conditions
+    termsConditions: c.termsConditions || c.terms,
+    
+    // Restrictions
+    requiresUniqueUser: c.requiresUniqueUser,
+    usageType: c.usageType,
+    geoRestriction: c.geoRestriction,
+    
+    // Pricing
+    price: c.price,
+    isFree: c.isFree,
+    redeemCost: c.redeemCost || 10,
+    
+    // Other
+    verified: c.isActive !== false,
+    usersRedeemed: c.soldQuantity ?? 0,
+  }
+}
 
 const platformIcons = {
   Swiggy: Utensils,
@@ -142,6 +112,14 @@ const categoryColors = {
 }
 
 export function BrowseCoupons() {
+  const { isAuthenticated } = useAuth()
+  const { showToast, ToastContainer } = useToast()
+  const [coupons, setCoupons] = useState([])
+  const [fullCoupons, setFullCoupons] = useState({}) // Store full coupon data by ID
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [selectedCoupon, setSelectedCoupon] = useState(null)
+  const [showModal, setShowModal] = useState(false)
   const [filters, setFilters] = useState({
     platform: "All Platforms",
     category: "All Categories",
@@ -152,8 +130,54 @@ export function BrowseCoupons() {
   })
   const [showFilters, setShowFilters] = useState(false)
 
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setError(null)
+    couponAPI
+      .browseCoupons({ activeOnly: true })
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          // Store full coupon data
+          const fullCouponsMap = {}
+          const cardCoupons = data.map((c) => {
+            fullCouponsMap[c.id] = c
+            return toCard(c)
+          })
+          setCoupons(cardCoupons)
+          console.log("Fetched coupons:", cardCoupons)
+          setFullCoupons(fullCouponsMap)
+          console.log("Full coupons map:", fullCouponsMap)
+        } else if (!cancelled && data) setCoupons([])
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err.message || "Failed to load coupons")
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [])
+
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const handleViewDetails = (coupon) => {
+    if (!isAuthenticated) {
+      showToast("Please log in to view coupon details", "warning", 3000)
+      return
+    }
+    // Use full coupon data if available and transform it with toCard
+    const rawCoupon = fullCoupons[coupon.id]
+    const fullCoupon = rawCoupon ? toCard(rawCoupon) : coupon
+    setSelectedCoupon(fullCoupon)
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedCoupon(null)
   }
 
   const resetFilters = () => {
@@ -167,7 +191,7 @@ export function BrowseCoupons() {
     })
   }
 
-  const filteredCoupons = dummyCoupons.filter((coupon) => {
+  const filteredCoupons = coupons.filter((coupon) => {
     if (filters.platform !== "All Platforms" && coupon.platform !== filters.platform) return false
     if (filters.category !== "All Categories" && coupon.category !== filters.category) return false
     if (filters.discountType !== "All Types" && coupon.type !== filters.discountType) return false
@@ -175,7 +199,7 @@ export function BrowseCoupons() {
     if (
       filters.searchQuery &&
       !coupon.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) &&
-      !coupon.platform.toLowerCase().includes(filters.searchQuery.toLowerCase())
+      !coupon.platformRaw.includes(filters.searchQuery.toLowerCase())
     )
       return false
     return true
@@ -184,6 +208,7 @@ export function BrowseCoupons() {
   return (
     <div className="browse-page">
       <Navbar />
+      <ToastContainer />
 
       <main>
         {/* Page Header */}
@@ -290,7 +315,29 @@ export function BrowseCoupons() {
         {/* Coupon Grid */}
         <section className="coupons-section">
           <div className="container">
-            {filteredCoupons.length > 0 ? (
+            {loading ? (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <RefreshCw size={48} className="spin" />
+                </div>
+                <h3>Loading coupons...</h3>
+              </div>
+            ) : error ? (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <Search size={48} />
+                </div>
+                <h3>Could not load coupons</h3>
+                <p>{error}</p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => window.location.reload()}
+                >
+                  <RefreshCw size={18} />
+                  Retry
+                </button>
+              </div>
+            ) : filteredCoupons.length > 0 ? (
               <div className="coupons-grid">
                 {filteredCoupons.map((coupon) => {
                   const PlatformIcon = platformIcons[coupon.platform] || ShoppingBag
@@ -334,7 +381,7 @@ export function BrowseCoupons() {
                             {coupon.usersRedeemed} redeemed
                           </span>
                         </div>
-                        <button className="btn btn-primary btn-view">View Details</button>
+                        <button className="btn btn-primary btn-view" onClick={() => handleViewDetails(coupon)}>View Details</button>
                       </div>
                     </article>
                   )
@@ -367,6 +414,9 @@ export function BrowseCoupons() {
           </div>
         </section>
       </main>
+
+      {/* Coupon Detail Modal */}
+      <CouponDetailModal coupon={selectedCoupon} isOpen={showModal} onClose={handleCloseModal} onShowToast={showToast} />
 
       <Footer />
     </div>

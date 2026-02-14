@@ -105,6 +105,15 @@
   color: var(--color-text);
 }
 
+.toast-success {
+  border-color: var(--color-accent-green, #10b981);
+  border-left-color: var(--color-accent-green, #10b981);
+}
+
+.toast-success .toast-icon {
+  color: var(--color-accent-green, #10b981);
+}
+
 .list-coupon-page {
   font-family: var(--font-sans);
   color: var(--color-text);

@@ -99,6 +99,26 @@
   color: var(--color-text-muted);
 }
 
+.points-display {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.points-display svg {
+  color: var(--color-primary);
+}
+
+.points-value {
+  font-weight: 700;
+}
+
 .user-name {
   max-width: 120px;
   overflow: hidden;
@@ -149,6 +169,10 @@
   }
 
   .user-info {
+    display: flex;
+  }
+
+  .points-display {
     display: flex;
   }
 

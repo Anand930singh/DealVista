@@ -34,21 +34,33 @@ const apiRequest = async (endpoint, options = {}) => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config)
-    
+    const url = `${API_BASE_URL}${endpoint}`
+    const response = await fetch(url, config)
+    const text = await response.text()
+
     if (!response.ok) {
       let errorMessage = "An error occurred"
       try {
-        const errorData = await response.json()
-        errorMessage = errorData.message || errorData.error || `HTTP error! status: ${response.status}`
-      } catch (parseError) {
-        // If response is not JSON, use status text
-        errorMessage = response.statusText || `HTTP error! status: ${response.status}`
+        const errorData = text ? JSON.parse(text) : {}
+        errorMessage =
+          errorData.message ||
+          errorData.error ||
+          (typeof errorData === "string" ? errorData : null) ||
+          errorMessage
+      } catch {
+        if (text && text.length < 200) errorMessage = text
+        else if (response.status === 404)
+          errorMessage =
+            "API not found. Check that the backend is running and the URL is correct (e.g. " + API_BASE_URL + ")."
+        else if (response.status === 401) errorMessage = "Invalid email or password"
+        else if (response.status === 403)
+          errorMessage = "Access denied. You may need to sign in or the login URL may be misconfigured."
+        else errorMessage = "Request failed (" + response.status + "). " + (text ? text.slice(0, 100) : "")
       }
       throw new Error(errorMessage)
     }
 
-    return await response.json()
+    return text ? JSON.parse(text) : null
   } catch (error) {
     // Handle network errors (CORS, connection refused, etc.)
     if (error.name === "TypeError" && error.message.includes("fetch")) {
@@ -101,6 +113,12 @@ export const couponAPI = {
     const queryParams = new URLSearchParams(filters).toString()
     return apiRequest(`/coupons/browse${queryParams ? `?${queryParams}` : ""}`, {
       method: "GET",
+    })
+  },
+
+  viewCouponCode: async (couponId) => {
+    return apiRequest(`/coupons/${couponId}/view-code`, {
+      method: "POST",
     })
   },
 }

@@ -118,11 +118,9 @@ export function CouponForm() {
     }
   }
 
-  const showToast = (message) => {
+  const showToast = (message, type = "error") => {
     const id = Date.now() + Math.random()
-    setToasts((prev) => [...prev, { id, message }])
-    
-    // Auto remove oast after 4 seconds
+    setToasts((prev) => [...prev, { id, message, type }])
     setTimeout(() => {
       setToasts((prev) => prev.filter((toast) => toast.id !== id))
     }, 4000)
@@ -166,9 +164,9 @@ export function CouponForm() {
         if (r.terms != null && r.terms !== "") next.terms = r.terms
         return next
       })
-      showToast("Form auto-filled from coupon image. Review and edit as needed.")
+      showToast("Form auto-filled from coupon image. Review and edit as needed.", "success")
     } catch (err) {
-      showToast(err.message || "Auto-fill failed. Try again or enter details manually.")
+      showToast(err.message || "Auto-fill failed. Try again or enter details manually.", "error")
     } finally {
       setIsAutoFilling(false)
     }
@@ -239,31 +237,38 @@ export function CouponForm() {
     setIsSubmitting(true)
 
     try {
-      // Prepare coupon data for API
+      // Prepare coupon data for API (backend expects enum discountType: FLAT | PERCENTAGE)
+      const discountTypeForApi =
+        formData.discountType === "flat" || formData.discountType === "percentage"
+          ? formData.discountType.toUpperCase()
+          : null
       const couponPayload = {
-        code: formData.code,
+        code: formData.code || null,
         title: formData.title,
         description: formData.description || "",
-        platform: formData.platform,
-        category: formData.category,
-        discountType: formData.discountType,
+        platform: formData.platform || null,
+        category: formData.category || null,
+        discountType: discountTypeForApi,
         discountValue: formData.discountValue ? parseFloat(formData.discountValue) : null,
         minOrderValue: formData.minOrderValue ? parseFloat(formData.minOrderValue) : null,
         maxDiscountValue: formData.maxDiscountValue ? parseFloat(formData.maxDiscountValue) : null,
         terms: formData.terms || "",
-        validFrom: formData.validFrom,
-        validTill: formData.validTill,
-        requiresUniqueUser: formData.requiresUniqueUser,
-        usageType: formData.usageType,
+        validFrom: formData.validFrom || null,
+        validTill: formData.validTill || null,
+        requiresUniqueUser: formData.requiresUniqueUser ?? false,
+        usageType: formData.usageType || "single-use",
         geoRestriction: formData.geoRestriction || "",
-        proofScreenshotUrl: formData.proofScreenshotUrl,
+        isActive: true,
+        totalQuantity: 1,
+        price: null,
+        isFree: true,
       }
 
       // Call API to list coupon
       await couponAPI.listCoupon(couponPayload)
       
       setSubmitSuccess(true)
-      showToast("Coupon listed successfully!")
+      showToast("Coupon listed successfully!", "success")
       
       // Reset form after successful submission
       setTimeout(() => {
@@ -298,7 +303,7 @@ export function CouponForm() {
       }, 2000)
     } catch (error) {
       setSubmitError(error.message || "Failed to list coupon. Please try again.")
-      showToast(error.message || "Failed to list coupon. Please try again.")
+      showToast(error.message || "Failed to list coupon. Please try again.", "error")
     } finally {
       setIsSubmitting(false)
     }
@@ -336,13 +341,20 @@ export function CouponForm() {
       {/* Toast Notifications */}
       <div className="toast-container">
         {toasts.map((toast) => (
-          <div key={toast.id} className="toast">
+          <div key={toast.id} className={`toast toast-${toast.type || "error"}`}>
             <div className="toast-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              {toast.type === "success" ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+              )}
             </div>
             <span className="toast-message">{toast.message}</span>
             <button

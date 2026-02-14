@@ -63,7 +63,8 @@ export default function AuthForm() {
       const userData = {
         id: response.id,
         email: response.email,
-        name: response.fullName,
+        fullName: response.fullName,
+        points: response.points,
         token: response.token,
       }
       
@@ -141,7 +142,8 @@ export default function AuthForm() {
       const userData = {
         id: response.id,
         email: response.email,
-        name: response.fullName,
+        fullName: response.fullName,
+        points: response.points,
         token: response.token,
       }
       

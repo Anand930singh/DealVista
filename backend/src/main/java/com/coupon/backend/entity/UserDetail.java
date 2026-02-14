@@ -22,6 +22,12 @@ public class UserDetail {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "points")
+    private Integer points;
+
+    @Column(name = "referalCode")
+    private String referalCode;
+
     @Column(name = "createdAt")
     private Instant createdAt;
 
@@ -80,6 +86,18 @@ public class UserDetail {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getPoints(){ return points; }
+
+    public void setPoints(Integer num) { this.points = num; }
+
+    public String getReferalCode() {
+        return referalCode;
+    }
+
+    public void setReferalCode(String referalCode) {
+        this.referalCode = referalCode;
     }
 
     public Instant getCreatedAt() {

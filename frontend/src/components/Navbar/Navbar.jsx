@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import { Gift, Menu, X, LogOut, User } from "lucide-react"
+import { Gift, Menu, X, LogOut, User, Award } from "lucide-react"
 import "./Navbar.css"
 
 export function Navbar() {
@@ -36,9 +36,13 @@ export function Navbar() {
         <div className="header-actions">
           {isAuthenticated ? (
             <>
+              <div className="points-display">
+                <Award size={18} />
+                <span className="points-value">{user?.points || 0}</span>
+              </div>
               <div className="user-info">
                 <User size={18} />
-                <span className="user-name">{user?.name || user?.email}</span>
+                <span className="user-name">{user?.fullName || user?.email}</span>
               </div>
               <button className="btn btn-secondary btn-signin" onClick={handleLogout}>
                 <LogOut size={18} />

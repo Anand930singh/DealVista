@@ -38,6 +38,9 @@ public class Coupon {
     private LocalDate validFrom;
     private LocalDate validTill;
 
+    @Column(length = 2000)
+    private String terms;
+
     private Boolean requiresUniqueUser;
     private String usageType; 
 
@@ -149,6 +152,14 @@ public class Coupon {
 
     public void setValidTill(LocalDate validTill) {
         this.validTill = validTill;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+
+    public void setTerms(String terms) {
+        this.terms = terms;
     }
 
     public Boolean getRequiresUniqueUser() {
