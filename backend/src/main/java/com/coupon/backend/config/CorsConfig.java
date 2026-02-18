@@ -40,6 +40,15 @@ public class CorsConfig {
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        
+        // Allow /api/health from anywhere
+        CorsConfiguration healthConfig = new CorsConfiguration();
+        healthConfig.setAllowedOriginPatterns(Arrays.asList("*"));
+        healthConfig.setAllowedMethods(Arrays.asList("GET", "OPTIONS"));
+        healthConfig.setAllowedHeaders(Arrays.asList("*"));
+        healthConfig.setMaxAge(3600L);
+        source.registerCorsConfiguration("/api/health", healthConfig);
+        
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
