@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.UUID;
 @RequestMapping("/coupons")
 @CrossOrigin(origins = {"https://coupon-collector.vercel.app", "http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://127.0.0.1:3000"}, allowCredentials = "true")
 public class CouponController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CouponController.class);
 
     @Autowired
     private CouponListingService couponListingService;
@@ -47,6 +51,7 @@ public class CouponController {
     public ResponseEntity<?> browseCoupons(
             @RequestParam(required = false, defaultValue = "true") boolean activeOnly) {
         try {
+            logger.info("Browse coupons request - Active Only: {}", activeOnly);
             List<CouponResponseDto> coupons = activeOnly
                     ? couponBrowseService.browseActive()
                     : couponBrowseService.browseAll();
