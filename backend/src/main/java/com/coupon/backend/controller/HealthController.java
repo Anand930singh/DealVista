@@ -16,6 +16,6 @@ public class HealthController {
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
         logger.info("Health check endpoint hit - Backend is UP");
-        return ResponseEntity.ok(Map.of("status", "UP"));
+        return ResponseEntity.ok(Map.of("status", "SUCCESS", "message", "Service is up"));
     }
 }
