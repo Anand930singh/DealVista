@@ -15,6 +15,13 @@ export function Navbar() {
     setMenuOpen(false)
   }
 
+  const getFirstName = () => {
+    if (user?.fullName) {
+      return user.fullName.split(" ")[0]
+    }
+    return user?.email?.split("@")[0] || "User"
+  }
+
   return (
     <header className="header">
       <div className="container header-content">
@@ -42,7 +49,7 @@ export function Navbar() {
               </div>
               <div className="user-info">
                 <User size={18} />
-                <span className="user-name">{user?.fullName || user?.email}</span>
+                <span className="user-name">{getFirstName()}</span>
               </div>
               <button className="btn btn-secondary btn-signin" onClick={handleLogout}>
                 <LogOut size={18} />

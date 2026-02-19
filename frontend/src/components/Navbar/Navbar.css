@@ -1,4 +1,5 @@
-/* Header */
+/* ================= HEADER ================= */
+
 .header {
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -12,7 +13,11 @@
   align-items: center;
   justify-content: space-between;
   height: 64px;
+  gap: 8px;
+  overflow: hidden;
 }
+
+/* ================= LOGO ================= */
 
 .logo {
   display: flex;
@@ -22,6 +27,7 @@
   font-weight: 700;
   color: var(--color-primary);
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .logo-icon {
@@ -29,7 +35,8 @@
   height: 28px;
 }
 
-/* Mobile Menu Button */
+/* ================= MOBILE MENU BUTTON ================= */
+
 .btn-mobile-menu {
   display: flex;
   align-items: center;
@@ -40,9 +47,11 @@
   border: none;
   color: var(--color-text);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-/* Navigation */
+/* ================= NAVIGATION ================= */
+
 .nav {
   display: none;
   position: absolute;
@@ -54,6 +63,7 @@
   padding: 16px;
   border-bottom: 1px solid var(--color-border);
   gap: 8px;
+  z-index: 50;
 }
 
 .nav-open {
@@ -74,70 +84,187 @@
   background: var(--color-primary-light);
 }
 
+/* ================= HEADER ACTIONS ================= */
+
 .header-actions {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
 
-.header-actions .btn-signin,
 .header-actions .btn-getstarted {
   display: none;
 }
 
-.user-info {
-  display: none;
+.header-actions .btn-signin {
+  display: inline-flex !important;
+  padding: 8px 14px;
+  font-size: 13px;
+  white-space: nowrap;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+}
+
+/* ================= USER INFO ================= */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  background: rgba(79, 70, 229, 0.08);
+  border-radius: var(--radius-sm);
+  max-width: 140px;
 }
 
 .user-info svg {
   color: var(--color-text-muted);
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
 }
 
+.user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================= POINTS DISPLAY ================= */
+
 .points-display {
-  display: none;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  gap: 4px;
+  padding: 6px 10px;
   background: var(--color-primary-light);
   border-radius: var(--radius-sm);
   color: var(--color-primary);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .points-display svg {
-  color: var(--color-primary);
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
 }
 
 .points-value {
   font-weight: 700;
 }
 
-.user-name {
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* ================= MOBILE ( < 640px ) ================= */
 
-/* Responsive */
-@media (min-width: 480px) {
+@media (max-width: 639px) {
+
   .header-content {
-    height: 68px;
+    height: 56px;
+    padding: 0 10px;
   }
 
   .logo {
-    font-size: 22px;
+    font-size: 18px;
+    gap: 6px;
+  }
+
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Hide logo text on very small screens */
+  .logo span {
+    display: none;
+  }
+
+  /* Fullscreen mobile nav */
+  .nav {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-surface);
+    padding: 20px;
+    gap: 20px;
+    border-bottom: none;
+    z-index: 200;
+  }
+
+  .nav a {
+    font-size: 16px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  /* Hide username text */
+  .user-name {
+    display: none;
+  }
+
+  .user-info {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .points-display {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  /* Show only icon for logout */
+  .btn-signin span {
+    display: none;
   }
 }
 
+/* Show logo text and username after 400px */
+
+@media (min-width: 400px) {
+  .logo span {
+    display: inline;
+  }
+
+  .user-name {
+    display: inline;
+  }
+
+  .btn-signin span {
+    display: inline;
+  }
+}
+
+/* ================= SMALL TABLET (640px - 767px) ================= */
+
+@media (min-width: 640px) and (max-width: 767px) {
+
+  .header-content {
+    height: 60px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .user-name {
+    max-width: 90px;
+  }
+}
+
+/* ================= TABLET & DESKTOP (768px+) ================= */
+
 @media (min-width: 768px) {
+
   .btn-mobile-menu {
     display: none;
   }
@@ -160,20 +287,8 @@
     background: transparent;
   }
 
-  .header-actions .btn-signin {
-    display: inline-flex;
-  }
-
   .header-actions .btn-getstarted {
     display: inline-flex;
-  }
-
-  .user-info {
-    display: flex;
-  }
-
-  .points-display {
-    display: flex;
   }
 
   .header-content {
@@ -188,5 +303,39 @@
     width: 32px;
     height: 32px;
   }
-}
 
+  .header-actions {
+    gap: 12px;
+  }
+
+  .user-name {
+    max-width: 120px;
+    font-size: 14px;
+  }
+
+  .points-display {
+    padding: 8px 14px;
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .points-display svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-actions .btn-signin {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .user-info {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .user-info svg {
+    width: 18px;
+    height: 18px;
+  }
+}
