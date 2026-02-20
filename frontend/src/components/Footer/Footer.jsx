@@ -9,7 +9,7 @@ export function Footer() {
         <div className="footer-brand">
           <Link to="/" className="logo">
             <Gift className="logo-icon" />
-            <span>CouponShare</span>
+            <span>DealVista</span>
           </Link>
           <p>The trusted coupon marketplace for verified discount coupons and online coupon exchange.</p>
         </div>
@@ -34,7 +34,7 @@ export function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <p>© 2025 CouponShare. All rights reserved.</p>
+        <p>© 2025 DealVista. All rights reserved.</p>
       </div>
     </footer>
   )

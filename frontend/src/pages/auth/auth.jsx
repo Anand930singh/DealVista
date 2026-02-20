@@ -221,7 +221,7 @@ export default function AuthForm() {
             <path d="M8 12v4" />
             <path d="M16 12v4" />
           </svg>
-          CouponShare
+          DealVista
         </Link>
 
         {/* Subtitle */}

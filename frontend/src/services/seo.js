@@ -1,7 +1,7 @@
 // SEO utility for managing page meta tags
 export const setPageMeta = (title, description, canonical) => {
   // Set page title
-  document.title = `${title} - CouponShare`;
+  document.title = `${title} - DealVista`;
 
   // Set or update meta description
   let metaDescription = document.querySelector('meta[name="description"]');
@@ -42,7 +42,7 @@ export const setPageMeta = (title, description, canonical) => {
 
 export const SEO = {
   home: {
-    title: 'CouponShare - India\'s  Coupon Marketplace',
+    title: 'DealVista - India\'s  Coupon Marketplace',
     description: 'भारत में verified coupons खोजें। Amazon, Swiggy, Zomato, PhonePe, Myntra पर discounts पाएं। अपने unused coupons share करें और reward points कमाएं।',
     canonical: 'https://coupon-collector.vercel.app',
   },
@@ -52,8 +52,8 @@ export const SEO = {
     canonical: 'https://coupon-collector.vercel.app/browse',
   },
   auth: {
-    title: 'Login & Sign Up - CouponShare में Join करें',
-    description: 'CouponShare में अपना account बनाएं। Coupons share करें, reward points कमाएं, और exclusive deals पाएं।',
+    title: 'Login & Sign Up - DealVista में Join करें',
+    description: 'DealVista में अपना account बनाएं। Coupons share करें, reward points कमाएं, और exclusive deals पाएं।',
     canonical: 'https://coupon-collector.vercel.app/auth',
   },
   upload: {

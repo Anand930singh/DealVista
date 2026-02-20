@@ -27,7 +27,7 @@ export function Navbar() {
       <div className="container header-content">
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
           <Gift className="logo-icon" />
-          <span>CouponShare</span>
+          <span>DealVista</span>
         </Link>
         <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
           <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>

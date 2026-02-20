@@ -1,4 +1,4 @@
-# CouponShare - Community Coupon Marketplace
+# DealVista - Community Coupon Marketplace
 
 A full-stack application that enables users to discover, share, and collect verified discount coupons with an integrated reward points system.
 
