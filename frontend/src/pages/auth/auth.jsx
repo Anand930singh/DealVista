@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { authAPI } from "../../services/api"
+import { setPageMeta, SEO } from "../../services/seo"
 import "./auth.css"
 
 export default function AuthForm() {
@@ -12,6 +13,10 @@ export default function AuthForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
   const [success, setSuccess] = useState("")
+
+  useEffect(() => {
+    setPageMeta(SEO.auth.title, SEO.auth.description, SEO.auth.canonical)
+  }, [])
 
   // Get the page user was trying to access before being redirected to login
   const from = location.state?.from?.pathname || sessionStorage.getItem("redirectAfterLogin") || "/"

@@ -1,0 +1,19 @@
+# Allow search engines to crawl all pages
+User-agent: *
+Allow: /
+Allow: /browse
+Allow: /auth
+Allow: /home
+
+# Disallow private/admin pages if any
+Disallow: /admin
+Disallow: /private
+
+# Sitemap location
+Sitemap: https://coupon-collector.vercel.app/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Request rate
+Request-rate: 1/1s

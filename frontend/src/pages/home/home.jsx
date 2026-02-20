@@ -1,6 +1,8 @@
 import "./home.css"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
+import { useEffect } from "react"
+import { setPageMeta, SEO } from "../../services/seo"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
 import {
@@ -26,6 +28,10 @@ import {
 export function Home() {
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setPageMeta(SEO.home.title, SEO.home.description, SEO.home.canonical)
+  }, [])
 
   const handleListCoupon = (e) => {
     e.preventDefault()

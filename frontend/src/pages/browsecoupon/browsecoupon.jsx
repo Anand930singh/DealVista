@@ -7,6 +7,7 @@ import { CouponDetailModal } from "../../components/CouponDetailModal/CouponDeta
 import { useAuth } from "../../contexts/AuthContext"
 import { useToast } from "../../components/Toast/Toast"
 import { couponAPI } from "../../services/api"
+import { setPageMeta, SEO } from "../../services/seo"
 import {
   Search,
   Filter,
@@ -131,6 +132,10 @@ export function BrowseCoupons() {
     searchQuery: "",
   })
   const [showFilters, setShowFilters] = useState(false)
+
+  useEffect(() => {
+    setPageMeta(SEO.browse.title, SEO.browse.description, SEO.browse.canonical)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
