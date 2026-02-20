@@ -42,12 +42,12 @@ export const setPageMeta = (title, description, canonical) => {
 
 export const SEO = {
   home: {
-    title: 'CouponShare - भारत का #1 Coupon Marketplace',
+    title: 'CouponShare - India\'s  Coupon Marketplace',
     description: 'भारत में verified coupons खोजें। Amazon, Swiggy, Zomato, PhonePe, Myntra पर discounts पाएं। अपने unused coupons share करें और reward points कमाएं।',
     canonical: 'https://coupon-collector.vercel.app',
   },
   browse: {
-    title: 'Browse Verified Coupons - भारत का सबसे बड़ा Database',
+    title: 'Browse Verified Coupons',
     description: 'हजारों verified coupons browse करें। Amazon, Swiggy, Zomato, PhonePe, Myntra, Flipkart पर discounts खोजें। Category और platform के हिसाब से filter करें।',
     canonical: 'https://coupon-collector.vercel.app/browse',
   },
