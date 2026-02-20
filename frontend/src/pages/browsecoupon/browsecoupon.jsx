@@ -1,5 +1,6 @@
 import "./browsecoupon.css"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
 import { CouponDetailModal } from "../../components/CouponDetailModal/CouponDetailModal"
@@ -113,6 +114,7 @@ const categoryColors = {
 
 export function BrowseCoupons() {
   const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
   const { showToast, ToastContainer } = useToast()
   const [coupons, setCoupons] = useState([])
   const [fullCoupons, setFullCoupons] = useState({}) // Store full coupon data by ID
@@ -172,6 +174,16 @@ export function BrowseCoupons() {
     const fullCoupon = rawCoupon ? toCard(rawCoupon) : coupon
     setSelectedCoupon(fullCoupon)
     setShowModal(true)
+  }
+
+  const handleListCoupon = () => {
+    if (!isAuthenticated) {
+      // Store redirect intent
+      sessionStorage.setItem("redirectAfterLogin", "/upload")
+      navigate("/auth")
+      return
+    }
+    navigate("/upload")
   }
 
   const handleCloseModal = () => {

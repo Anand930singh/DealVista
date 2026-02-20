@@ -14,7 +14,7 @@ export default function AuthForm() {
   const [success, setSuccess] = useState("")
 
   // Get the page user was trying to access before being redirected to login
-  const from = location.state?.from?.pathname || "/"
+  const from = location.state?.from?.pathname || sessionStorage.getItem("redirectAfterLogin") || "/"
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState("")
@@ -70,6 +70,9 @@ export default function AuthForm() {
       
       login(userData)
       setSuccess("Login successful! Redirecting...")
+      
+      // Clear the redirect intent if it was set
+      sessionStorage.removeItem("redirectAfterLogin")
       
       // Redirect to the page user was trying to access, or home
       setTimeout(() => {

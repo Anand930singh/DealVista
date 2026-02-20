@@ -299,8 +299,17 @@ export function CouponForm() {
         // navigate("/browse")
       }, 2000)
     } catch (error) {
-      setSubmitError(error.message || "Failed to list coupon. Please try again.")
-      showToast(error.message || "Failed to list coupon. Please try again.", "error")
+      let errorMessage = "Failed to list coupon. Please try again."
+      
+      // Try to extract error message from backend response
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+      
+      setSubmitError(errorMessage)
+      showToast(errorMessage, "error")
     } finally {
       setIsSubmitting(false)
     }
@@ -815,11 +824,23 @@ export function CouponForm() {
               <button type="button" className="btn btn-secondary btn-lg">
                 Save as Draft
               </button>
-              <button type="submit" className="btn btn-primary btn-lg">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-                List Coupon
+              <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}>
+                      <circle cx="12" cy="12" r="10" fill="none" stroke-dasharray="60" stroke-dashoffset="0" />
+                      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-dasharray="20" stroke-dashoffset="0" />
+                    </svg>
+                    Listing...
+                  </>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                    List Coupon
+                  </>
+                )}
               </button>
             </div>
           </form>

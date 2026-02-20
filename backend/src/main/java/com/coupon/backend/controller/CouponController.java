@@ -38,9 +38,12 @@ public class CouponController {
     @PostMapping
     public ResponseEntity<?> listCoupon(@Valid @RequestBody CouponRequestDto request, Authentication authentication) {
         try {
+            logger.debug("Listing new coupon with code");
             CouponResponseDto saved = couponListingService.save(request, authentication.getName());
+            logger.debug("Coupon listed successfully");
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (RuntimeException e) {
+            logger.error("Failed to list coupon: {}", e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("message", e.getMessage() != null ? e.getMessage() : "Failed to save coupon");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -51,7 +54,7 @@ public class CouponController {
     public ResponseEntity<?> browseCoupons(
             @RequestParam(required = false, defaultValue = "true") boolean activeOnly) {
         try {
-            logger.info("Browse coupons request - Active Only: {}", activeOnly);
+            logger.debug("Browse coupons request - Active Only: {}", activeOnly);
             List<CouponResponseDto> coupons = activeOnly
                     ? couponBrowseService.browseActive()
                     : couponBrowseService.browseAll();

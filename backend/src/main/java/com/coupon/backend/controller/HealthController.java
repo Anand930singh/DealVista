@@ -17,13 +17,13 @@ public class HealthController {
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
-        logger.info("Health check endpoint hit - Backend is UP");
+        logger.debug("Health check endpoint hit - Backend is UP");
         return ResponseEntity.ok(Map.of("status", "SUCCESS", "message", "Service is up"));
     }
 
     @RequestMapping(value = "/health", method = RequestMethod.HEAD)
     public ResponseEntity<Void> healthHead() {
-        logger.info("Health check HEAD request - Backend is UP");
+        logger.debug("Health check HEAD request - Backend is UP");
         return ResponseEntity.ok().build();
     }
 }
