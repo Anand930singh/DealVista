@@ -316,7 +316,7 @@ export default function AuthForm() {
                 )}
               </button>
 
-              <div className="divider">
+              {/* <div className="divider">
                 <span>OR</span>
               </div>
 
@@ -345,7 +345,7 @@ export default function AuthForm() {
                   />
                 </svg>
                 Continue with Google
-              </button>
+              </button> */}
 
               <p className="auth-switch">
                 Don't have an account?{" "}
@@ -422,7 +422,7 @@ export default function AuthForm() {
                 )}
               </button>
 
-              <div className="divider">
+              {/* <div className="divider">
                 <span>OR</span>
               </div>
 
@@ -451,7 +451,7 @@ export default function AuthForm() {
                   />
                 </svg>
                 Continue with Google
-              </button>
+              </button> */}
 
               <p className="auth-switch">
                 Already have an account?{" "}
