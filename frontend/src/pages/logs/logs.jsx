@@ -3,7 +3,7 @@ import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
 import { logsAPI } from "../../services/api"
 import { setPageMeta, SEO } from "../../services/seo"
-import { FileText, Calendar, User, AlertCircle, RefreshCw, Clock } from "lucide-react"
+import { FileText, Calendar, User, AlertCircle, RefreshCw, Clock, Copy, Check } from "lucide-react"
 import "./logs.css"
 
 export function Logs() {
@@ -11,6 +11,7 @@ export function Logs() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchQuery, setSearchQuery] = useState("")
+  const [copiedId, setCopiedId] = useState(null)
 
   useEffect(() => {
     setPageMeta("System Logs - DealVista", "View all system activity logs and user actions", "https://coupon-collector.vercel.app/logs")
@@ -70,12 +71,21 @@ export function Logs() {
     }
   }
 
+  const copyToClipboard = async (text, id) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(null), 2000)
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
+
   const filteredLogs = logs.filter((log) => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
     return (
       log.message?.toLowerCase().includes(query) ||
-      log.userId?.toLowerCase().includes(query) ||
       log.id?.toLowerCase().includes(query)
     )
   })
@@ -109,7 +119,7 @@ export function Logs() {
               <FileText size={18} />
               <input
                 type="text"
-                placeholder="Search logs by message, user ID, or log ID..."
+                placeholder="Search logs by message or log ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -172,21 +182,17 @@ export function Logs() {
                 <table className="logs-table">
                   <thead>
                     <tr>
-                      <th>
+                      <th className="timestamp-header">
                         <Clock size={16} />
-                        Timestamp
+                        <span>Timestamp</span>
                       </th>
-                      <th>
+                      <th className="message-header">
                         <FileText size={16} />
-                        Message
+                        <span>Message</span>
                       </th>
-                      <th>
-                        <User size={16} />
-                        User ID
-                      </th>
-                      <th>
+                      <th className="id-header">
                         <Calendar size={16} />
-                        Log ID
+                        <span>Log ID</span>
                       </th>
                     </tr>
                   </thead>
@@ -202,11 +208,17 @@ export function Logs() {
                         <td className="message-cell">
                           <div className="message-content">{log.message}</div>
                         </td>
-                        <td className="user-cell">
-                          <code className="user-id">{log.userId?.slice(0, 8)}...</code>
-                        </td>
                         <td className="id-cell">
-                          <code className="log-id">{log.id?.slice(0, 8)}...</code>
+                          <div className="id-wrapper">
+                            <code className="log-id">{log.id?.slice(0, 8)}...</code>
+                            <button
+                              className="copy-btn"
+                              onClick={() => copyToClipboard(log.id, log.id)}
+                              title="Copy full ID"
+                            >
+                              {copiedId === log.id ? <Check size={14} /> : <Copy size={14} />}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -224,26 +236,15 @@ export function Logs() {
                   </div>
                 </div>
                 {filteredLogs.length > 0 && (
-                  <>
-                    <div className="summary-card">
-                      <Calendar size={20} />
-                      <div className="summary-info">
-                        <span className="summary-value">
-                          {formatRelativeTime(filteredLogs[0]?.createdAt)}
-                        </span>
-                        <span className="summary-label">Latest Log</span>
-                      </div>
+                  <div className="summary-card">
+                    <Calendar size={20} />
+                    <div className="summary-info">
+                      <span className="summary-value">
+                        {formatRelativeTime(filteredLogs[0]?.createdAt)}
+                      </span>
+                      <span className="summary-label">Latest Log</span>
                     </div>
-                    <div className="summary-card">
-                      <User size={20} />
-                      <div className="summary-info">
-                        <span className="summary-value">
-                          {new Set(filteredLogs.map((log) => log.userId)).size}
-                        </span>
-                        <span className="summary-label">Unique Users</span>
-                      </div>
-                    </div>
-                  </>
+                  </div>
                 )}
               </div>
             </div>

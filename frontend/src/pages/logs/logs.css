@@ -298,6 +298,7 @@
 .logs-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .logs-table thead {
@@ -316,14 +317,24 @@
   white-space: nowrap;
 }
 
-.logs-table thead th {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .logs-table thead th svg {
   color: var(--color-primary);
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.logs-table thead .timestamp-header,
+.logs-table thead .message-header,
+.logs-table thead .id-header {
+  width: auto;
+}
+
+.logs-table thead .timestamp-header {
+  width: 200px;
+}
+
+.logs-table thead .id-header {
+  width: 200px;
 }
 
 .logs-table tbody tr {
@@ -342,7 +353,7 @@
 .logs-table tbody td {
   padding: 16px 20px;
   font-size: 14px;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 /* Table Cells */
@@ -378,12 +389,16 @@
   word-wrap: break-word;
 }
 
-.user-cell,
 .id-cell {
-  min-width: 120px;
+  min-width: 160px;
 }
 
-.user-id,
+.id-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .log-id {
   font-family: "Monaco", "Courier New", monospace;
   font-size: 13px;
@@ -393,6 +408,30 @@
   color: var(--color-primary);
   border: 1px solid var(--color-border);
   display: inline-block;
+}
+
+.copy-btn {
+  padding: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+.copy-btn:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.copy-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* Logs Summary */

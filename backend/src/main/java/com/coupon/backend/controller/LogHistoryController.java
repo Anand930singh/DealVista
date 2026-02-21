@@ -1,5 +1,6 @@
 package com.coupon.backend.controller;
 
+import com.coupon.backend.dto.LogHistoryResponseDto;
 import com.coupon.backend.entity.LogHistory;
 import com.coupon.backend.service.LogHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/logs")
@@ -24,12 +26,15 @@ public class LogHistoryController {
     private LogHistoryService logHistoryService;
 
     /**
-     * Get all logs (sorted by newest first)
+     * Get all logs (sorted by newest first) - returns DTO without userId
      */
     @GetMapping
-    public ResponseEntity<List<LogHistory>> getAllLogs() {
+    public ResponseEntity<List<LogHistoryResponseDto>> getAllLogs() {
         List<LogHistory> logs = logHistoryService.getAllLogs();
-        return ResponseEntity.ok(logs);
+        List<LogHistoryResponseDto> response = logs.stream()
+            .map(log -> new LogHistoryResponseDto(log.getId(), log.getMessage(), log.getCreatedAt()))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     /**
