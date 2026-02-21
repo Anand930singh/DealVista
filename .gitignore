@@ -29,9 +29,8 @@ backend/out/
 backend/.gradle/
 gradle/
 
-# Logs
+# Logs (but not frontend/src/pages/logs source code)
 *.log
-logs/
 
 # ==================== FRONTEND SENSITIVE FILES ====================
 
