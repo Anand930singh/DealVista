@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../contexts/AuthContext"
 import { couponAPI, extractAPI } from "../../services/api"
 import "./couponform.css"
 import { createWorker } from "tesseract.js"
 
 export function CouponForm() {
   const navigate = useNavigate()
+  const { user, updatePoints } = useAuth()
   const [formData, setFormData] = useState({
     proofScreenshotUrl: "",
     code: "",
@@ -266,6 +268,11 @@ export function CouponForm() {
       
       setSubmitSuccess(true)
       showToast("Coupon listed successfully!", "success")
+      
+      // Update points in navbar
+      if (user && updatePoints) {
+        updatePoints((user.points || 0) + 5)
+      }
       
       // Reset form after successful submission
       setTimeout(() => {

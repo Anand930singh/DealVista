@@ -65,17 +65,24 @@ public class CouponController {
 
     @GetMapping("/browse")
     public ResponseEntity<?> browseCoupons(
-            @RequestParam(required = false, defaultValue = "true") boolean activeOnly) {
-        logger.debug("[COUPON] Browse: active={}", activeOnly);
+            @RequestParam(required = false, defaultValue = "true") boolean activeOnly,
+            @RequestParam(required = false) String platform,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String discountType,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        logger.debug("[COUPON] Browse: active={}, platform={}, category={}, discountType={}, search={}, page={}, size={}", 
+                activeOnly, platform, category, discountType, search, page, size);
         
         try {
-            List<CouponResponseDto> coupons = activeOnly
-                    ? couponBrowseService.browseActive()
-                    : couponBrowseService.browseAll();
+            Map<String, Object> response = couponBrowseService.browseCouponsWithFilters(
+                    activeOnly, platform, category, discountType, search, page, size);
             
-            logger.debug("[COUPON] Retrieved {} coupons", coupons.size());
+            logger.debug("[COUPON] Retrieved page {} with {} coupons", page, 
+                    ((List<?>) response.get("coupons")).size());
             
-            return ResponseEntity.ok(coupons);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             logger.error("[COUPON] Browse failed: {}", e.getMessage());
             

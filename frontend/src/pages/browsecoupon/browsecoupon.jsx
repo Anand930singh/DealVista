@@ -131,42 +131,117 @@ export function BrowseCoupons() {
     verifiedOnly: false,
     searchQuery: "",
   })
+  const [appliedFilters, setAppliedFilters] = useState({
+    platform: "All Platforms",
+    category: "All Categories",
+    discountType: "All Types",
+    searchQuery: "",
+  })
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+    totalPages: 0,
+    totalItems: 0,
+    pageSize: 10,
+    hasNext: false,
+    hasPrevious: false,
+  })
   const [showFilters, setShowFilters] = useState(false)
 
   useEffect(() => {
     setPageMeta(SEO.browse.title, SEO.browse.description, SEO.browse.canonical)
   }, [])
 
-  useEffect(() => {
-    let cancelled = false
+  const fetchCoupons = (filterParams = {}, page = 0) => {
     setLoading(true)
     setError(null)
+    
+    const apiFilters = { activeOnly: true, page, size: 10 }
+    
+    // Only include non-empty filter values
+    if (filterParams.platform && filterParams.platform !== "All Platforms") {
+      apiFilters.platform = filterParams.platform.trim()
+    }
+    if (filterParams.category && filterParams.category !== "All Categories") {
+      apiFilters.category = filterParams.category.trim()
+    }
+    if (filterParams.discountType && filterParams.discountType !== "All Types") {
+      // Map frontend display values to backend enum values
+      const typeMap = {
+        "Flat Discount": "FLAT",
+        "Percentage": "PERCENTAGE",
+        "Cashback": "CASHBACK",
+        "BOGO": "BOGO"
+      }
+      const mappedType = typeMap[filterParams.discountType] || filterParams.discountType
+      if (mappedType) {
+        apiFilters.discountType = mappedType
+      }
+    }
+    if (filterParams.searchQuery && filterParams.searchQuery.trim()) {
+      apiFilters.search = filterParams.searchQuery.trim()
+    }
+
     couponAPI
-      .browseCoupons({ activeOnly: true })
+      .browseCoupons(apiFilters)
       .then((data) => {
-        if (!cancelled && Array.isArray(data)) {
-          // Store full coupon data
+        if (data && data.coupons && Array.isArray(data.coupons)) {
           const fullCouponsMap = {}
-          const cardCoupons = data.map((c) => {
+          const cardCoupons = data.coupons.map((c) => {
             fullCouponsMap[c.id] = c
             return toCard(c)
           })
           setCoupons(cardCoupons)
-
           setFullCoupons(fullCouponsMap)
-        } else if (!cancelled && data) setCoupons([])
+          setPagination({
+            currentPage: data.currentPage,
+            totalPages: data.totalPages,
+            totalItems: data.totalItems,
+            pageSize: data.pageSize,
+            hasNext: data.hasNext,
+            hasPrevious: data.hasPrevious,
+          })
+        } else {
+          setCoupons([])
+          setPagination({
+            currentPage: 0,
+            totalPages: 0,
+            totalItems: 0,
+            pageSize: 10,
+            hasNext: false,
+            hasPrevious: false,
+          })
+        }
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message || "Failed to load coupons")
+        setError(err.message || "Failed to load coupons")
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
+        setLoading(false)
       })
-    return () => { cancelled = true }
+  }
+
+  useEffect(() => {
+    // Initial fetch with default filters
+    fetchCoupons(appliedFilters, 0)
   }, [])
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const applyFilters = () => {
+    setAppliedFilters({
+      platform: filters.platform,
+      category: filters.category,
+      discountType: filters.discountType,
+      searchQuery: filters.searchQuery,
+    })
+    fetchCoupons(filters, 0)
+  }
+
+  const handlePageChange = (newPage) => {
+    fetchCoupons(appliedFilters, newPage)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleViewDetails = (coupon) => {
@@ -197,29 +272,40 @@ export function BrowseCoupons() {
   }
 
   const resetFilters = () => {
-    setFilters({
+    const defaultFilters = {
       platform: "All Platforms",
       category: "All Categories",
       discountType: "All Types",
       sortBy: "Latest",
       verifiedOnly: false,
       searchQuery: "",
+    }
+    setFilters(defaultFilters)
+    setAppliedFilters({
+      platform: "All Platforms",
+      category: "All Categories",
+      discountType: "All Types",
+      searchQuery: "",
     })
+    fetchCoupons({ platform: "All Platforms", category: "All Categories", discountType: "All Types", searchQuery: "" }, 0)
   }
 
-  const filteredCoupons = coupons.filter((coupon) => {
-    if (filters.platform !== "All Platforms" && coupon.platform !== filters.platform) return false
-    if (filters.category !== "All Categories" && coupon.category !== filters.category) return false
-    if (filters.discountType !== "All Types" && coupon.type !== filters.discountType) return false
-    if (filters.verifiedOnly && !coupon.verified) return false
-    if (
-      filters.searchQuery &&
-      !coupon.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) &&
-      !coupon.platformRaw.includes(filters.searchQuery.toLowerCase())
-    )
-      return false
-    return true
-  })
+  // Apply frontend-only filters (verified, sort) - backend handles the rest
+  const filteredCoupons = coupons
+    .filter((coupon) => {
+      if (filters.verifiedOnly && !coupon.verified) return false
+      return true
+    })
+    .sort((a, b) => {
+      // Frontend sorting since backend returns latest first by default
+      if (filters.sortBy === "Expiring Soon") {
+        const dateA = a.validTill ? new Date(a.validTill).getTime() : Infinity
+        const dateB = b.validTill ? new Date(b.validTill).getTime() : Infinity
+        return dateA - dateB
+      }
+      // "Latest" and "Most Popular" use default order from backend
+      return 0
+    })
 
   return (
     <div className="browse-page">
@@ -323,6 +409,11 @@ export function BrowseCoupons() {
                   <RefreshCw size={16} />
                   Reset
                 </button>
+
+                <button className="btn btn-primary btn-apply-filter" onClick={applyFilters}>
+                  <Filter size={16} />
+                  Apply Filters
+                </button>
               </div>
             </div>
           </div>
@@ -414,6 +505,42 @@ export function BrowseCoupons() {
                   <RefreshCw size={18} />
                   Reset Filters
                 </button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {!loading && !error && filteredCoupons.length > 0 && pagination.totalPages > 1 && (
+              <div className="pagination-container">
+                <div className="pagination-info">
+                  Showing {pagination.currentPage * pagination.pageSize + 1} - {Math.min((pagination.currentPage + 1) * pagination.pageSize, pagination.totalItems)} of {pagination.totalItems} coupons
+                </div>
+                <div className="pagination-controls">
+                  <button 
+                    className="btn btn-secondary pagination-btn"
+                    onClick={() => handlePageChange(pagination.currentPage - 1)}
+                    disabled={!pagination.hasPrevious}
+                  >
+                    Previous
+                  </button>
+                  <div className="pagination-pages">
+                    {[...Array(pagination.totalPages)].map((_, index) => (
+                      <button
+                        key={index}
+                        className={`pagination-page ${pagination.currentPage === index ? 'active' : ''}`}
+                        onClick={() => handlePageChange(index)}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                  <button 
+                    className="btn btn-secondary pagination-btn"
+                    onClick={() => handlePageChange(pagination.currentPage + 1)}
+                    disabled={!pagination.hasNext}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
           </div>

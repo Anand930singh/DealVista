@@ -29,12 +29,21 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user")
   }
 
+  const updatePoints = (newPoints) => {
+    if (user) {
+      const updatedUser = { ...user, points: newPoints }
+      setUser(updatedUser)
+      localStorage.setItem("user", JSON.stringify(updatedUser))
+    }
+  }
+
   const value = {
     user,
     isAuthenticated: !!user,
     isLoading,
     login,
     logout,
+    updatePoints,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
