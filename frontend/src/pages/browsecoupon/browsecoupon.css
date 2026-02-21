@@ -192,9 +192,9 @@
   line-height: 1.5;
 }
 
-/* Filters Section */
+/* Filters Section — Compact Inline Design */
 .filters-section {
-  padding: 0 0 24px;
+  padding: 0 0 16px;
   position: sticky;
   top: 64px;
   z-index: 50;
@@ -203,32 +203,34 @@
 
 .filters-card {
   background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: 16px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 12px;
 }
 
 .filters-top {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .search-bar {
   flex: 1;
-  min-width: 200px;
+  min-width: 140px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
+  gap: 6px;
+  padding: 6px 10px;
   background: var(--color-background);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   transition: border-color 0.2s ease;
+  height: 34px;
 }
 
 .search-bar:focus-within {
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.08);
 }
 
 .search-bar input {
@@ -236,7 +238,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--color-text);
 }
 
@@ -247,10 +249,20 @@
 .search-bar svg {
   color: var(--color-text-muted);
   flex-shrink: 0;
+  width: 16px;
+  height: 16px;
 }
 
 .btn-filter-toggle {
   display: flex;
+  padding: 6px 10px;
+  font-size: 13px;
+  height: 34px;
+}
+
+.btn-filter-toggle svg {
+  width: 14px;
+  height: 14px;
 }
 
 .btn-filter-toggle .rotated {
@@ -259,40 +271,47 @@
 
 .filters-grid {
   display: none;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid var(--color-border);
+  align-items: center;
 }
 
 .filters-open {
-  display: grid;
+  display: flex;
 }
 
 .filter-group {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .filter-group label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  display: none;
 }
 
 .filter-group select {
-  padding: 10px 12px;
+  padding: 5px 24px 5px 8px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 13px;
   color: var(--color-text);
   background: var(--color-surface);
   cursor: pointer;
   transition: border-color 0.2s ease;
+  height: 34px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  white-space: nowrap;
 }
 
 .filter-group select:focus {
@@ -300,7 +319,12 @@
   border-color: var(--color-primary);
 }
 
-/* Toggle Switch */
+.filter-group select:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+/* Toggle Switch — Compact */
 .filter-toggle-group {
   justify-content: flex-end;
 }
@@ -308,12 +332,13 @@
 .toggle-label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   text-transform: none;
   letter-spacing: normal;
+  white-space: nowrap;
 }
 
 .toggle-label input {
@@ -322,11 +347,12 @@
 
 .toggle-switch {
   position: relative;
-  width: 44px;
-  height: 24px;
+  width: 34px;
+  height: 18px;
   background: var(--color-border);
   border-radius: var(--radius-full);
   transition: background 0.2s ease;
+  flex-shrink: 0;
 }
 
 .toggle-switch::after {
@@ -334,8 +360,8 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   background: white;
   border-radius: 50%;
   transition: transform 0.2s ease;
@@ -347,16 +373,31 @@
 }
 
 .toggle-label input:checked + .toggle-switch::after {
-  transform: translateX(20px);
+  transform: translateX(16px);
 }
 
 .btn-reset {
-  align-self: flex-end;
+  flex-shrink: 0;
+  padding: 5px 10px;
+  font-size: 13px;
+  height: 34px;
+}
+
+.btn-reset svg {
+  width: 14px;
+  height: 14px;
 }
 
 .btn-apply-filter {
-  align-self: flex-end;
-  margin-left: auto;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 13px;
+  height: 34px;
+}
+
+.btn-apply-filter svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* Pagination */
@@ -848,8 +889,19 @@
     font-size: 17px;
   }
 
+  /* Compact single-row filter bar on desktop */
   .filters-card {
-    padding: 20px;
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filters-top {
+    flex: 1 1 auto;
+    min-width: 180px;
+    gap: 8px;
   }
 
   .btn-filter-toggle {
@@ -857,14 +909,18 @@
   }
 
   .filters-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr) auto auto;
-    margin-top: 16px;
-    align-items: flex-end;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    gap: 6px;
+    align-items: center;
   }
 
   .filter-toggle-group {
-    align-self: flex-end;
+    align-self: center;
   }
 
   .footer-content {
@@ -903,6 +959,16 @@
   .coupon-title {
     font-size: 17px;
   }
+
+  /* Even tighter on large screens */
+  .filters-card {
+    padding: 6px 14px;
+    gap: 8px;
+  }
+
+  .search-bar {
+    min-width: 200px;
+  }
 }
 
 /* Large desktops (1280px+) */
@@ -916,7 +982,7 @@
   }
 
   .filters-card {
-    padding: 24px;
+    padding: 6px 16px;
   }
 
   .coupons-grid {

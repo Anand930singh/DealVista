@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { Gift, Menu, X, LogOut, User, Award } from "lucide-react"
 import "./Navbar.css"
@@ -8,6 +8,7 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = () => {
     logout()
@@ -30,18 +31,24 @@ export function Navbar() {
           <span>DealVista</span>
         </Link>
         <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
-          <Link to="/#how-it-works" onClick={() => setMenuOpen(false)}>
-            How It Works
-          </Link>
-          <Link to="/#categories" onClick={() => setMenuOpen(false)}>
-            Categories
-          </Link>
-          <Link to="/#rewards" onClick={() => setMenuOpen(false)}>
-            Rewards
-          </Link>
-          {user?.role === "ADMIN" && (
+          {location.pathname !== "/" && (
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              Home
+            </Link>
+          )}
+          {location.pathname !== "/browse" && (
+            <Link to="/browse" onClick={() => setMenuOpen(false)}>
+              Browse Coupons
+            </Link>
+          )}
+          {user?.role === "ADMIN" && location.pathname !== "/logs" && (
             <Link to="/logs" onClick={() => setMenuOpen(false)}>
               Logs
+            </Link>
+          )}
+          {location.pathname !== "/upload" && (
+            <Link to="/upload" onClick={() => setMenuOpen(false)}>
+              List Coupon
             </Link>
           )}
         </nav>

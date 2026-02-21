@@ -128,7 +128,7 @@ export function BrowseCoupons() {
     category: "All Categories",
     discountType: "All Types",
     sortBy: "Latest",
-    verifiedOnly: false,
+    verifiedOnly: true,
     searchQuery: "",
   })
   const [appliedFilters, setAppliedFilters] = useState({
@@ -221,8 +221,8 @@ export function BrowseCoupons() {
   }
 
   useEffect(() => {
-    // Initial fetch with default filters
-    fetchCoupons(appliedFilters, 0)
+    // Initial fetch with empty filters to load all active coupons
+    fetchCoupons({}, 0)
   }, [])
 
   const handleFilterChange = (key, value) => {
@@ -277,7 +277,7 @@ export function BrowseCoupons() {
       category: "All Categories",
       discountType: "All Types",
       sortBy: "Latest",
-      verifiedOnly: false,
+      verifiedOnly: true,
       searchQuery: "",
     }
     setFilters(defaultFilters)
@@ -330,7 +330,7 @@ export function BrowseCoupons() {
             <div className="filters-card">
               <div className="filters-top">
                 <div className="search-bar">
-                  <Search size={20} />
+                  <Search size={16} />
                   <input
                     type="text"
                     placeholder="Search coupons or platforms..."
@@ -339,9 +339,9 @@ export function BrowseCoupons() {
                   />
                 </div>
                 <button className="btn btn-secondary btn-filter-toggle" onClick={() => setShowFilters(!showFilters)}>
-                  <Filter size={18} />
+                  <Filter size={14} />
                   Filters
-                  <ChevronDown size={16} className={showFilters ? "rotated" : ""} />
+                  <ChevronDown size={14} className={showFilters ? "rotated" : ""} />
                 </button>
               </div>
 
@@ -406,13 +406,13 @@ export function BrowseCoupons() {
                 </div>
 
                 <button className="btn btn-secondary btn-reset" onClick={resetFilters}>
-                  <RefreshCw size={16} />
+                  <RefreshCw size={14} />
                   Reset
                 </button>
 
                 <button className="btn btn-primary btn-apply-filter" onClick={applyFilters}>
-                  <Filter size={16} />
-                  Apply Filters
+                  <Filter size={14} />
+                  Apply
                 </button>
               </div>
             </div>
