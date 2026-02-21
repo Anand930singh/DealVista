@@ -41,7 +41,6 @@ public class CorsConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         
-        // Allow /api/health from anywhere
         CorsConfiguration healthConfig = new CorsConfiguration();
         healthConfig.setAllowedOriginPatterns(Arrays.asList("*"));
         healthConfig.setAllowedMethods(Arrays.asList("GET", "OPTIONS"));

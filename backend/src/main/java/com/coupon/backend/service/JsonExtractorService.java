@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 @Service
 public class JsonExtractorService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonExtractorService.class);
 
     private static final String MODEL = "gemini-3-flash-preview";
 
@@ -72,17 +76,33 @@ public class JsonExtractorService {
     }
 
     public CouponRequestDto extractFromPrompt(String prompt) {
+        logger.debug("[EXTRACT] Starting extraction from prompt - Length: {} chars", prompt.length());
+        logger.debug("[EXTRACT] Prompt preview: {}...", prompt.substring(0, Math.min(100, prompt.length())));
+        
         String finalPrompt = INSTRUCTIONS + "\n\nText:\n" + prompt;
+        
+        logger.debug("[EXTRACT] Calling Gemini API - Model: {}", MODEL);
         GenerateContentResponse response = client.models.generateContent(
                 MODEL,
                 finalPrompt,
                 null);
+        
         String raw = response.text();
+        logger.debug("[EXTRACT] Received response - Length: {} chars", raw.length());
+        
         String json = stripMarkdownJson(raw);
+        logger.debug("[EXTRACT] Stripped JSON - Length: {} chars", json.length());
+        
         try {
             Map<String, Object> map = objectMapper.readValue(json, new TypeReference<>() {});
-            return extractResultMapper.toCouponRequestDto(map);
+            logger.info("[EXTRACT] Successfully parsed JSON - Fields: {}", map.keySet());
+            
+            CouponRequestDto result = extractResultMapper.toCouponRequestDto(map);
+            
+            return result;
         } catch (Exception e) {
+            logger.error("[EXTRACT] Failed to parse JSON - Error: {}", e.getMessage());
+            logger.debug("[EXTRACT] Raw JSON: {}", json);
             throw new RuntimeException("Failed to parse extracted JSON: " + e.getMessage(), e);
         }
     }

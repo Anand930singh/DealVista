@@ -64,10 +64,8 @@ export default function AuthForm() {
     try {
       const response = await authAPI.signin(loginEmail, loginPassword)
       
-      // Store user data with token
+      // Store only non-sensitive user data (security: don't store id/email)
       const userData = {
-        id: response.id,
-        email: response.email,
         fullName: response.fullName,
         points: response.points,
         token: response.token,
@@ -146,10 +144,8 @@ export default function AuthForm() {
     try {
       const response = await authAPI.signup(fullName, signupEmail, signupPassword)
       
-      // Auto-login after signup
+      // Store only non-sensitive user data (security: don't store id/email)
       const userData = {
-        id: response.id,
-        email: response.email,
         fullName: response.fullName,
         points: response.points,
         token: response.token,

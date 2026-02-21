@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.UUID;
 
 @Service
 public class CouponListingService {
@@ -25,9 +26,11 @@ public class CouponListingService {
     @Autowired
     private RewardPointsService rewardPointsService;
 
+    @Autowired
+    private LogHistoryService logHistoryService;
+
     @Transactional
-    public CouponResponseDto save(CouponRequestDto request, String listedByEmail) {
-        // Check if coupon code already exists in database
+    public CouponResponseDto save(CouponRequestDto request, UUID id) {
         if (request.code() != null && !request.code().trim().isEmpty()) {
             String code = request.code().trim();
             logger.debug("Checking if coupon code exists: {}", code);
@@ -36,17 +39,19 @@ public class CouponListingService {
             
             if (codeExists) {
                 logger.warn("Duplicate coupon code attempt: {}", code);
-                throw new RuntimeException("Coupon code \"" + code + "\" is already listed. Please use a different coupon code.");
+                throw new RuntimeException("This coupon code already exists. Please try a different one.");
             }
         }
 
-        // Save the coupon
+
         Coupon entity = couponMapper.toEntity(request);
         Coupon saved = couponRepository.save(entity);
-        logger.info("Coupon saved successfully - Code: {}", saved.getCode());
+        logger.debug("Coupon saved successfully - Code: {}", saved.getCode());
         
-        // Add reward points
-        rewardPointsService.addPointsByEmail(listedByEmail, 5);
+        rewardPointsService.addPointsById(id, 5);
+        
+        // Log user activity
+        logHistoryService.createLog("Listed coupon: " + saved.getId() + ")", id);
         
         return couponMapper.toResponseDto(saved);
     }

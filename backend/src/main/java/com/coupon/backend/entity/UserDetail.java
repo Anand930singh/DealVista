@@ -28,6 +28,9 @@ public class UserDetail {
     @Column(name = "referalCode")
     private String referalCode;
 
+    @Column(name = "role", columnDefinition = "VARCHAR(255) DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN'))", nullable = false)
+    private String role = "USER";
+
     @Column(name = "createdAt")
     private Instant createdAt;
 
@@ -38,6 +41,9 @@ public class UserDetail {
     protected void onCreate() {
         createdAt = Instant.now();
         updatedAt = Instant.now();
+        if (role == null) {
+            role = "USER";
+        }
     }
 
     @PreUpdate
@@ -98,6 +104,14 @@ public class UserDetail {
 
     public void setReferalCode(String referalCode) {
         this.referalCode = referalCode;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Instant getCreatedAt() {

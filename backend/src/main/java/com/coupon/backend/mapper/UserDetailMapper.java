@@ -37,9 +37,7 @@ public class UserDetailMapper {
 
     public UserDetailsResponseDto toResponseDto(UserDetail userDetail, String token) {
         return new UserDetailsResponseDto(
-                userDetail.getId(),
                 userDetail.getFullName(),
-                userDetail.getEmail(),
                 userDetail.getPoints(),
                 token
         );

@@ -88,6 +88,12 @@ export const authAPI = {
       body: JSON.stringify({ email, password }),
     })
   },
+
+  getUserProfile: async () => {
+    return apiRequest("/auth/profile", {
+      method: "GET",
+    })
+  },
 }
 
 // Extract API (Gemini) - extract coupon fields from text
@@ -123,9 +129,25 @@ export const couponAPI = {
   },
 }
 
+// Logs API
+export const logsAPI = {
+  getAllLogs: async () => {
+    return apiRequest("/logs", {
+      method: "GET",
+    })
+  },
+
+  getLogById: async (logId) => {
+    return apiRequest(`/logs/${logId}`, {
+      method: "GET",
+    })
+  },
+}
+
 export default {
   authAPI,
   couponAPI,
   extractAPI,
+  logsAPI,
 }
 

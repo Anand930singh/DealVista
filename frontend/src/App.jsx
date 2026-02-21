@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute'
 import { Home } from './pages/home/home'
 import { Upload } from './pages/uploadcoupon/upload'
 import { BrowseCoupons } from './pages/browsecoupon/browsecoupon'
+import { Logs } from './pages/logs/logs'
 import AuthForm from './pages/auth/auth'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<AuthForm />} />
           <Route path="/browse" element={<BrowseCoupons />} />
+          <Route path="/logs" element={<Logs />} />
           <Route
             path="/upload"
             element={

@@ -19,7 +19,7 @@ export function Navbar() {
     if (user?.fullName) {
       return user.fullName.split(" ")[0]
     }
-    return user?.email?.split("@")[0] || "User"
+    return "User"
   }
 
   return (
@@ -38,6 +38,9 @@ export function Navbar() {
           </Link>
           <Link to="/#rewards" onClick={() => setMenuOpen(false)}>
             Rewards
+          </Link>
+          <Link to="/logs" onClick={() => setMenuOpen(false)}>
+            Logs
           </Link>
         </nav>
         <div className="header-actions">
