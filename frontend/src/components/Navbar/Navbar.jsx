@@ -39,9 +39,11 @@ export function Navbar() {
           <Link to="/#rewards" onClick={() => setMenuOpen(false)}>
             Rewards
           </Link>
-          <Link to="/logs" onClick={() => setMenuOpen(false)}>
-            Logs
-          </Link>
+          {user?.role === "ADMIN" && (
+            <Link to="/logs" onClick={() => setMenuOpen(false)}>
+              Logs
+            </Link>
+          )}
         </nav>
         <div className="header-actions">
           {isAuthenticated ? (

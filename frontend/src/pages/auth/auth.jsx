@@ -69,6 +69,7 @@ export default function AuthForm() {
         fullName: response.fullName,
         points: response.points,
         token: response.token,
+        role: response.role,
       }
       
       login(userData)
@@ -149,6 +150,7 @@ export default function AuthForm() {
         fullName: response.fullName,
         points: response.points,
         token: response.token,
+        role: response.role,
       }
       
       login(userData)

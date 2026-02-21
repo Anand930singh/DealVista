@@ -34,6 +34,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/auth/**", "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/api/coupons/browse", "/coupons/browse").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/api/health", "/health").permitAll();
+                    auth.requestMatchers("/api/logs/**", "/logs/**").hasAuthority("ADMIN");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session

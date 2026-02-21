@@ -39,7 +39,8 @@ public class UserDetailMapper {
         return new UserDetailsResponseDto(
                 userDetail.getFullName(),
                 userDetail.getPoints(),
-                token
+                token,
+                userDetail.getRole()
         );
     }
 }
