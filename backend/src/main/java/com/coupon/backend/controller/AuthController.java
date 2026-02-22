@@ -41,7 +41,6 @@ public class AuthController {
         
         try {
             UserDetailsResponseDto response = authService.register(requestDto);
-            logger.info("[AUTH] User registered: {}", requestDto.email());
             
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
@@ -59,7 +58,6 @@ public class AuthController {
         
         try {
             UserDetailsResponseDto response = authService.signin(requestDto);
-            logger.info("[AUTH] User signed in: {}", requestDto.email());
             
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {

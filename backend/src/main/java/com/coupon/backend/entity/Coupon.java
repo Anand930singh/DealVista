@@ -52,6 +52,8 @@ public class Coupon {
     private Integer totalQuantity = 1;   
     private Integer soldQuantity = 0;
 
+    private Integer redeemCost = 5;
+
     private BigDecimal price;          
     private Boolean isFree = true;
 
@@ -208,6 +210,14 @@ public class Coupon {
 
     public void setSoldQuantity(Integer soldQuantity) {
         this.soldQuantity = soldQuantity;
+    }
+
+    public Integer getRedeemCost() {
+        return redeemCost;
+    }
+
+    public void setRedeemCost(Integer redeemCost) {
+        this.redeemCost = redeemCost;
     }
 
     public BigDecimal getPrice() {

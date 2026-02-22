@@ -1,5 +1,6 @@
 package com.coupon.backend.service;
 
+import com.coupon.backend.dto.CouponBrowseDto;
 import com.coupon.backend.dto.CouponResponseDto;
 import com.coupon.backend.entity.Coupon;
 import com.coupon.backend.mapper.CouponMapper;
@@ -44,9 +45,6 @@ public class CouponBrowseService {
         return couponMapper.toResponseDto(coupon);
     }
 
-    /**
-     * Browse coupons with filters and pagination applied at database level
-     */
     public Map<String, Object> browseCouponsWithFilters(
             boolean activeOnly, String platform, String category, String discountType, String search,
             int page, int size) {
@@ -60,12 +58,11 @@ public class CouponBrowseService {
             pageable
         );
         
-        // Map to DTOs
-        List<CouponResponseDto> coupons = couponPage.getContent().stream()
-                .map(couponMapper::toResponseDto)
+        // Map to BrowseDto which excludes code
+        List<CouponBrowseDto> coupons = couponPage.getContent().stream()
+                .map(couponMapper::toBrowseDto)
                 .collect(Collectors.toList());
         
-        // Build response with pagination metadata
         Map<String, Object> response = new HashMap<>();
         response.put("coupons", coupons);
         response.put("currentPage", couponPage.getNumber());

@@ -244,16 +244,24 @@ export function BrowseCoupons() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const handleViewDetails = (coupon) => {
+  const handleViewDetails = async (coupon) => {
     if (!isAuthenticated) {
       showToast("Please log in to view coupon details", "warning", 3000)
       return
     }
-    // Use full coupon data if available and transform it with toCard
-    const rawCoupon = fullCoupons[coupon.id]
-    const fullCoupon = rawCoupon ? toCard(rawCoupon) : coupon
-    setSelectedCoupon(fullCoupon)
-    setShowModal(true)
+    
+    // Fetch full coupon details with code from backend
+    try {
+      setLoading(true)
+      const fullCouponData = await couponAPI.getCouponById(coupon.id)
+      const fullCoupon = toCard(fullCouponData)
+      setSelectedCoupon(fullCoupon)
+      setShowModal(true)
+    } catch (err) {
+      showToast(err.message || "Failed to load coupon details", "error", 3000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleListCoupon = () => {

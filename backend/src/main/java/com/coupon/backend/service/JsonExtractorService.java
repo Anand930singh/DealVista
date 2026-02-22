@@ -95,7 +95,6 @@ public class JsonExtractorService {
         
         try {
             Map<String, Object> map = objectMapper.readValue(json, new TypeReference<>() {});
-            logger.info("[EXTRACT] Successfully parsed JSON - Fields: {}", map.keySet());
             
             CouponRequestDto result = extractResultMapper.toCouponRequestDto(map);
             

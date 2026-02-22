@@ -1,5 +1,6 @@
 package com.coupon.backend.mapper;
 
+import com.coupon.backend.dto.CouponBrowseDto;
 import com.coupon.backend.dto.CouponRequestDto;
 import com.coupon.backend.dto.CouponResponseDto;
 import com.coupon.backend.entity.Coupon;
@@ -63,8 +64,36 @@ public class CouponMapper {
                 entity.getSoldQuantity(),
                 entity.getPrice(),
                 entity.getIsFree(),
+                entity.getRedeemCost(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
+        );
+    }
+
+    public CouponBrowseDto toBrowseDto(Coupon entity) {
+        if (entity == null) return null;
+        return new CouponBrowseDto(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getDescription(),
+                entity.getPlatform(),
+                entity.getCategory(),
+                entity.getDiscountType(),
+                entity.getDiscountValue(),
+                entity.getMinOrderValue(),
+                entity.getMaxDiscountValue(),
+                entity.getValidFrom(),
+                entity.getValidTill(),
+                entity.getTerms(),
+                entity.getRequiresUniqueUser(),
+                entity.getUsageType(),
+                entity.getGeoRestriction(),
+                entity.getIsActive(),
+                entity.getSoldQuantity(),
+                entity.getPrice(),
+                entity.getIsFree(),
+                entity.getRedeemCost(),
+                entity.getCreatedAt()
         );
     }
 }

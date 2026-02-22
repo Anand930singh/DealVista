@@ -122,6 +122,12 @@ export const couponAPI = {
     })
   },
 
+  getCouponById: async (couponId) => {
+    return apiRequest(`/coupons/${couponId}`, {
+      method: "GET",
+    })
+  },
+
   viewCouponCode: async (couponId) => {
     return apiRequest(`/coupons/${couponId}/view-code`, {
       method: "POST",

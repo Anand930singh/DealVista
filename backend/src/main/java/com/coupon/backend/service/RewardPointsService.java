@@ -37,9 +37,6 @@ public class RewardPointsService {
         user.setPoints(newPoints);
         userDetailRepository.save(user);
         
-        logger.info("[REWARDS] Points added successfully - User: {}, New balance: {}",
-            user.getEmail(), newPoints);
-        
         // Log user activity
         logHistoryService.createLog("Earned " + pointsToAdd + " reward points (Balance: " + newPoints + ")", id);
     }

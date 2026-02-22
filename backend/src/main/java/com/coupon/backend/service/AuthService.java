@@ -48,7 +48,6 @@ public class AuthService {
         
         logger.debug("[AUTH_SERVICE] Saving user to database");
         UserDetail savedUser = userDetailRepository.save(user);
-        logger.info("[AUTH_SERVICE] User saved successfully - ID: {}, Email: {}", savedUser.getId(), savedUser.getEmail());
         
         logger.debug("[AUTH_SERVICE] Generating JWT token for user: {}", savedUser.getEmail());
         String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getId().toString());
@@ -77,7 +76,6 @@ public class AuthService {
             throw new RuntimeException("Incorrect password. Please try again.");
         }
         
-        logger.info("[AUTH_SERVICE] Password validated successfully for user: {}", requestDto.email());
         logger.debug("[AUTH_SERVICE] Generating JWT token for user ID: {}", user.getId());
         
         String token = jwtUtil.generateToken(user.getEmail(), user.getId().toString());

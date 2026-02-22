@@ -116,9 +116,7 @@ public class CouponController {
         try {
             String token = httpRequest.getHeader("Authorization").substring(7);
             String userId = jwtUtil.extractUserId(token);
-            String email = jwtUtil.extractEmail(token);
             
-            logger.info("[COUPON] Code viewed: {} by {}", id, email);
             rewardPointsService.deductPointsById(UUID.fromString(userId), 5);
             
             Map<String, String> response = new HashMap<>();

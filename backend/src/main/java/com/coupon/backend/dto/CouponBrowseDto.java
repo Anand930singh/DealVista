@@ -7,11 +7,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CouponResponseDto(
+public record CouponBrowseDto(
         UUID id,
         String title,
         String description,
-        String code,
         String platform,
         String category,
         DiscountType discountType,
@@ -25,12 +24,10 @@ public record CouponResponseDto(
         String usageType,
         String geoRestriction,
         Boolean isActive,
-        Integer totalQuantity,
         Integer soldQuantity,
         BigDecimal price,
         Boolean isFree,
         Integer redeemCost,
-        Instant createdAt,
-        Instant updatedAt
+        Instant createdAt
 ) {
 }

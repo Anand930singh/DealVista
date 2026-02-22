@@ -20,12 +20,10 @@ public class CouponSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Active filter
             if (activeOnly != null && activeOnly) {
                 predicates.add(criteriaBuilder.isTrue(root.get("isActive")));
             }
 
-            // Platform filter - only add if non-blank
             if (platform != null && !platform.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(
                     criteriaBuilder.lower(root.get("platform")), 
@@ -33,7 +31,6 @@ public class CouponSpecification {
                 ));
             }
 
-            // Category filter - only add if non-blank
             if (category != null && !category.trim().isEmpty()) {
                 predicates.add(criteriaBuilder.equal(
                     criteriaBuilder.lower(root.get("category")), 
@@ -41,17 +38,14 @@ public class CouponSpecification {
                 ));
             }
 
-            // Discount type filter - only add if non-blank
             if (discountType != null && !discountType.trim().isEmpty()) {
                 try {
                     DiscountType type = DiscountType.valueOf(discountType.trim().toUpperCase());
                     predicates.add(criteriaBuilder.equal(root.get("discountType"), type));
                 } catch (IllegalArgumentException e) {
-                    // Invalid discount type, skip this filter
                 }
             }
 
-            // Search filter - only add if non-blank
             if (search != null && !search.trim().isEmpty()) {
                 String searchPattern = "%" + search.trim().toLowerCase() + "%";
                 Predicate titleMatch = criteriaBuilder.like(
@@ -69,7 +63,6 @@ public class CouponSpecification {
                 predicates.add(criteriaBuilder.or(titleMatch, platformMatch, descMatch));
             }
 
-            // Order by createdAt desc
             query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
