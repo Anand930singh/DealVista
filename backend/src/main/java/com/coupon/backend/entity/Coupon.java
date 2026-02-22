@@ -54,6 +54,7 @@ public class Coupon {
     private Integer totalQuantity = 1;   
     private Integer soldQuantity = 0;
 
+    @Column(name = "redeem_cost", columnDefinition = "INTEGER DEFAULT 5")
     private Integer redeemCost = 5;
 
     private BigDecimal price;          

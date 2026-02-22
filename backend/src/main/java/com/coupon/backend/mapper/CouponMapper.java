@@ -33,6 +33,7 @@ public class CouponMapper {
         entity.setTotalQuantity(dto.totalQuantity() != null ? dto.totalQuantity() : 1);
         entity.setPrice(dto.price());
         entity.setIsFree(dto.isFree() != null ? dto.isFree() : true);
+        entity.setRedeemCost(5);
         entity.setSoldQuantity(0);
         Instant now = Instant.now();
         entity.setCreatedAt(now);
