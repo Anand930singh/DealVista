@@ -69,14 +69,9 @@ export function Navbar() {
               </button>
             </>
           ) : (
-            <>
-              <Link to="/auth" className="btn btn-secondary btn-signin" onClick={() => setMenuOpen(false)}>
-                Sign In
-              </Link>
-              <Link to="/auth" className="btn btn-primary btn-getstarted" onClick={() => setMenuOpen(false)}>
-                Get Started
-              </Link>
-            </>
+            <Link to="/auth" className="btn btn-secondary btn-signin" onClick={() => setMenuOpen(false)}>
+              Sign In
+            </Link>
           )}
           <button className="btn-mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}

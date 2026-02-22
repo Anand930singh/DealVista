@@ -1,29 +1,32 @@
-/* ================= HEADER ================= */
+/* ========================================
+   NAVBAR STYLES
+======================================== */
 
+/* Header */
 .header {
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--color-border);
 }
 
+/* Layout */
 .header-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 56px;
   gap: 8px;
-  overflow: hidden;
 }
 
-/* ================= LOGO ================= */
-
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--color-primary);
   text-decoration: none;
@@ -31,52 +34,47 @@
 }
 
 .logo-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 }
 
-/* ================= MOBILE MENU BUTTON ================= */
-
-.btn-mobile-menu {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: none;
-  color: var(--color-text);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-/* ================= NAVIGATION ================= */
+/* =========================
+   NAVIGATION (MOBILE FIRST)
+========================= */
 
 .nav {
-  display: none;
-  position: absolute;
-  top: 64px;
+  position: fixed;
+  top: 56px;
   left: 0;
   right: 0;
   background: var(--color-surface);
   flex-direction: column;
-  padding: 16px;
+  padding: 8px 16px 16px;
   border-bottom: 1px solid var(--color-border);
-  gap: 8px;
-  z-index: 50;
+  gap: 2px;
+  z-index: 95;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-110%);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  pointer-events: none;
+  display: flex;
 }
 
 .nav-open {
-  display: flex;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .nav a {
   color: var(--color-text-muted);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .nav a:hover {
@@ -84,50 +82,61 @@
   background: var(--color-primary-light);
 }
 
-/* ================= HEADER ACTIONS ================= */
+/* =========================
+   HEADER ACTIONS
+========================= */
 
 .header-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
   flex-shrink: 0;
 }
 
-.header-actions .btn-getstarted {
-  display: none;
-}
-
-.header-actions .btn-signin {
-  display: inline-flex !important;
-  padding: 8px 14px;
+.btn-signin {
+  padding: 6px 12px;
   font-size: 13px;
+  height: 32px;
   white-space: nowrap;
-  align-items: center;
-  gap: 6px;
+  display: inline-flex !important;
 }
 
-/* ================= USER INFO ================= */
+.btn-getstarted {
+  display: inline-flex !important;
+}
+
+/* Mobile Menu Button */
+.btn-mobile-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.btn-mobile-menu:hover {
+  background: var(--color-primary-light);
+}
+
+/* =========================
+   USER INFO
+========================= */
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  color: var(--color-text);
-  font-size: 13px;
+  gap: 5px;
+  padding: 5px 8px;
+  font-size: 12px;
   font-weight: 500;
-  background: rgba(79, 70, 229, 0.08);
-  border-radius: var(--radius-sm);
-  max-width: 140px;
-}
-
-.user-info svg {
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  background: rgba(79, 70, 229, 0.06);
+  border-radius: 6px;
+  max-width: 110px;
 }
 
 .user-name {
@@ -136,133 +145,44 @@
   white-space: nowrap;
 }
 
-/* ================= POINTS DISPLAY ================= */
-
+/* Points Display */
 .points-display {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 10px;
+  padding: 5px 8px;
   background: var(--color-primary-light);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   color: var(--color-primary);
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
 }
 
-.points-display svg {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-}
-
 .points-value {
   font-weight: 700;
 }
 
-/* ================= MOBILE ( < 640px ) ================= */
+/* =========================
+   RESPONSIVE
+========================= */
 
-@media (max-width: 639px) {
-
-  .header-content {
-    height: 56px;
-    padding: 0 10px;
-  }
-
-  .logo {
-    font-size: 18px;
-    gap: 6px;
-  }
-
-  .logo-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* Hide logo text on very small screens */
+/* Hide some text on very small screens */
+@media (max-width: 479px) {
   .logo span {
     display: none;
   }
 
-  /* Fullscreen mobile nav */
-  .nav {
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-surface);
-    padding: 20px;
-    gap: 20px;
-    border-bottom: none;
-    z-index: 200;
-  }
-
-  .nav a {
-    font-size: 16px;
-  }
-
-  .header-actions {
-    gap: 6px;
-  }
-
-  /* Hide username text */
   .user-name {
     display: none;
   }
 
-  .user-info {
-    padding: 4px 6px;
-    font-size: 11px;
-  }
-
-  .points-display {
-    padding: 4px 6px;
-    font-size: 11px;
-  }
-
-  /* Show only icon for logout */
-  .btn-signin span {
-    display: none;
+  .btn-signin {
+    padding: 6px 8px !important;
   }
 }
 
-/* Show logo text and username after 400px */
-
-@media (min-width: 400px) {
-  .logo span {
-    display: inline;
-  }
-
-  .user-name {
-    display: inline;
-  }
-
-  .btn-signin span {
-    display: inline;
-  }
-}
-
-/* ================= SMALL TABLET (640px - 767px) ================= */
-
-@media (min-width: 640px) and (max-width: 767px) {
-
-  .header-content {
-    height: 60px;
-  }
-
-  .logo {
-    font-size: 20px;
-  }
-
-  .user-name {
-    max-width: 90px;
-  }
-}
-
-/* ================= TABLET & DESKTOP (768px+) ================= */
-
+/* Desktop Navbar */
 @media (min-width: 768px) {
 
   .btn-mobile-menu {
@@ -270,29 +190,48 @@
   }
 
   .nav {
-    display: flex;
     position: static;
     flex-direction: row;
     padding: 0;
     border: none;
-    gap: 32px;
     background: transparent;
+    box-shadow: none;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    gap: 6px;
   }
 
   .nav a {
-    padding: 8px 0;
-  }
-
-  .nav a:hover {
-    background: transparent;
-  }
-
-  .header-actions .btn-getstarted {
-    display: inline-flex;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 9999px;
+    white-space: nowrap;
   }
 
   .header-content {
-    height: 72px;
+    height: 64px;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-content {
+    height: 68px;
+    gap: 16px;
   }
 
   .logo {
@@ -300,42 +239,23 @@
   }
 
   .logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
-  .header-actions {
-    gap: 12px;
-  }
-
-  .user-name {
-    max-width: 120px;
+  .btn-signin {
     font-size: 14px;
-  }
-
-  .points-display {
-    padding: 8px 14px;
-    font-size: 14px;
-    gap: 6px;
-  }
-
-  .points-display svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .header-actions .btn-signin {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: 7px 16px;
+    height: 34px;
   }
 
   .user-info {
-    padding: 8px 12px;
     font-size: 14px;
+    padding: 7px 12px;
   }
 
-  .user-info svg {
-    width: 18px;
-    height: 18px;
+  .points-display {
+    font-size: 14px;
+    padding: 7px 12px;
   }
 }
