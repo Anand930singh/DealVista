@@ -7,23 +7,31 @@ export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
   const [showCode, setShowCode] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isDeductingPoints, setIsDeductingPoints] = useState(false)
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false)
 
   if (!isOpen || !coupon) return null
 
-  const handleRevealCode = async () => {
+  const handleRevealCode = () => {
     if (showCode) {
       // User is hiding the code, just toggle
       setShowCode(false)
       return
     }
 
-    // User is revealing the code - deduct 5 points
+    // Show confirmation popup before revealing code
+    setShowConfirmPopup(true)
+  }
+
+  const handleConfirmReveal = async () => {
+    setShowConfirmPopup(false)
+    
+    // User confirmed - reveal the code and deduct points
     setIsDeductingPoints(true)
     try {
       await couponAPI.viewCouponCode(coupon.id)
       setShowCode(true)
       if (onShowToast) {
-        onShowToast("5 points deducted! Coupon code revealed.", "info")
+        onShowToast(`${coupon.redeemCost} points deducted! Coupon code revealed.`, "info")
       }
     } catch (error) {
       if (onShowToast) {
@@ -35,6 +43,10 @@ export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
     } finally {
       setIsDeductingPoints(false)
     }
+  }
+
+  const handleCancelReveal = () => {
+    setShowConfirmPopup(false)
   }
 
   const handleCopyCode = () => {
@@ -54,6 +66,42 @@ export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
 
   return (
     <>
+      {/* Confirmation Popup */}
+      {showConfirmPopup && (
+        <>
+          <div className="confirmation-overlay" onClick={handleCancelReveal}></div>
+          <div className="confirmation-popup">
+            <div className="confirmation-header">
+              <AlertCircle size={48} color="#f59e0b" />
+              <h3>Confirm Point Deduction</h3>
+            </div>
+            <div className="confirmation-body">
+              <p>
+                Viewing this coupon code will deduct{" "}
+                <strong>{coupon.redeemCost} points</strong> from your balance.
+              </p>
+              <p className="confirmation-subtitle">
+                Do you want to continue?
+              </p>
+            </div>
+            <div className="confirmation-actions">
+              <button 
+                className="btn-cancel" 
+                onClick={handleCancelReveal}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-confirm" 
+                onClick={handleConfirmReveal}
+              >
+                Confirm & View Code
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Overlay */}
       <div className="modal-overlay" onClick={onClose}></div>
 
@@ -203,16 +251,6 @@ export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Modal Footer */}
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onClose}>
-              Close
-            </button>
-            <button className="btn btn-primary">
-              Redeem Coupon
-            </button>
           </div>
         </div>
       </div>

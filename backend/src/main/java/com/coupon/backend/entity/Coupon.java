@@ -49,6 +49,8 @@ public class Coupon {
     private Boolean isActive = true;
 
 
+    private UUID listedByUserId;
+
     private Integer totalQuantity = 1;   
     private Integer soldQuantity = 0;
 
@@ -194,6 +196,14 @@ public class Coupon {
 
     public void setIsActive(Boolean active) {
         isActive = active;
+    }
+
+    public UUID getListedByUserId() {
+        return listedByUserId;
+    }
+
+    public void setListedByUserId(UUID listedByUserId) {
+        this.listedByUserId = listedByUserId;
     }
 
     public Integer getTotalQuantity() {

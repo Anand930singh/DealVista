@@ -86,7 +86,7 @@ function toCard(c) {
     // Pricing
     price: c.price,
     isFree: c.isFree,
-    redeemCost: c.redeemCost || 10,
+    redeemCost: c.redeemCost,
     
     // Other
     verified: c.isActive !== false,

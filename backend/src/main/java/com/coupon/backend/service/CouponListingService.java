@@ -45,6 +45,7 @@ public class CouponListingService {
 
 
         Coupon entity = couponMapper.toEntity(request);
+        entity.setListedByUserId(id);
         Coupon saved = couponRepository.save(entity);
         logger.debug("Coupon saved successfully - Code: {}", saved.getCode());
         

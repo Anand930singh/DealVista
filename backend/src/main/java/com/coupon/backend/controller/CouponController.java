@@ -4,6 +4,7 @@ import com.coupon.backend.dto.CouponRequestDto;
 import com.coupon.backend.dto.CouponResponseDto;
 import com.coupon.backend.service.CouponBrowseService;
 import com.coupon.backend.service.CouponListingService;
+import com.coupon.backend.service.CouponRedemptionService;
 import com.coupon.backend.service.RewardPointsService;
 import com.coupon.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,9 @@ public class CouponController {
 
     @Autowired
     private CouponBrowseService couponBrowseService;
+
+    @Autowired
+    private CouponRedemptionService couponRedemptionService;
 
     @Autowired
     private RewardPointsService rewardPointsService;
@@ -117,10 +121,11 @@ public class CouponController {
             String token = httpRequest.getHeader("Authorization").substring(7);
             String userId = jwtUtil.extractUserId(token);
             
-            rewardPointsService.deductPointsById(UUID.fromString(userId), 5);
+            // Redeem coupon (deducts points, increments soldQuantity, creates redemption record)
+            couponRedemptionService.redeemCoupon(id, UUID.fromString(userId));
             
             Map<String, String> response = new HashMap<>();
-            response.put("message", "5 points deducted successfully");
+            response.put("message", "Coupon redeemed successfully");
             response.put("userId", userId);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
