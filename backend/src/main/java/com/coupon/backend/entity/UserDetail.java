@@ -25,6 +25,12 @@ public class UserDetail {
     @Column(name = "points")
     private Integer points;
 
+    @Column(name = "totalPointsEarned", columnDefinition = "INTEGER DEFAULT 0")
+    private Integer totalPointsEarned = 0;
+
+    @Column(name = "totalPointsSpent", columnDefinition = "INTEGER DEFAULT 0")
+    private Integer totalPointsSpent = 0;
+
     @Column(name = "referalCode")
     private String referalCode;
 
@@ -97,6 +103,14 @@ public class UserDetail {
     public Integer getPoints(){ return points; }
 
     public void setPoints(Integer num) { this.points = num; }
+
+    public Integer getTotalPointsEarned() { return totalPointsEarned; }
+
+    public void setTotalPointsEarned(Integer totalPointsEarned) { this.totalPointsEarned = totalPointsEarned; }
+
+    public Integer getTotalPointsSpent() { return totalPointsSpent; }
+
+    public void setTotalPointsSpent(Integer totalPointsSpent) { this.totalPointsSpent = totalPointsSpent; }
 
     public String getReferalCode() {
         return referalCode;

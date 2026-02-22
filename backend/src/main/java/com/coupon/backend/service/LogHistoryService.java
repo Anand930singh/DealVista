@@ -53,6 +53,6 @@ public class LogHistoryService {
     }
 
     public long countLogsByUserId(UUID userId) {
-        return logHistoryRepository.findByUserId(userId).size();
+        return logHistoryRepository.countByUserId(userId);
     }
 }

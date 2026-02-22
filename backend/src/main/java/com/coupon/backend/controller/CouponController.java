@@ -5,7 +5,6 @@ import com.coupon.backend.dto.CouponResponseDto;
 import com.coupon.backend.service.CouponBrowseService;
 import com.coupon.backend.service.CouponListingService;
 import com.coupon.backend.service.CouponRedemptionService;
-import com.coupon.backend.service.RewardPointsService;
 import com.coupon.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -36,9 +35,6 @@ public class CouponController {
 
     @Autowired
     private CouponRedemptionService couponRedemptionService;
-
-    @Autowired
-    private RewardPointsService rewardPointsService;
 
     @Autowired
     private JwtUtil jwtUtil;

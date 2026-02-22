@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface LogHistoryRepository extends JpaRepository<LogHistory, UUID> {
     List<LogHistory> findByUserId(UUID userId);
+    
+    long countByUserId(UUID userId);
 }

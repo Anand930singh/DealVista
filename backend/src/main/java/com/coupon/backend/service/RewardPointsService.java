@@ -35,6 +35,11 @@ public class RewardPointsService {
             user.getEmail(), currentPoints, pointsToAdd, newPoints);
         
         user.setPoints(newPoints);
+        
+        // Update total points earned
+        int totalEarned = user.getTotalPointsEarned() != null ? user.getTotalPointsEarned() : 0;
+        user.setTotalPointsEarned(totalEarned + pointsToAdd);
+        
         userDetailRepository.save(user);
         
         // Log user activity
@@ -63,6 +68,11 @@ public class RewardPointsService {
         
         int newPoints = currentPoints - pointsToDeduct;
         user.setPoints(newPoints);
+        
+        // Update total points spent
+        int totalSpent = user.getTotalPointsSpent() != null ? user.getTotalPointsSpent() : 0;
+        user.setTotalPointsSpent(totalSpent + pointsToDeduct);
+        
         userDetailRepository.save(user);
         
         logger.info("[REWARDS] Points deducted successfully - User: {}, New balance: {}",

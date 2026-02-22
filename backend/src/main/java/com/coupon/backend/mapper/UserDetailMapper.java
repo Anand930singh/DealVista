@@ -24,6 +24,8 @@ public class UserDetailMapper {
         userDetail.setEmail(userDetailsRequestDto.email());
         userDetail.setPassword(passwordEncoder.encode(userDetailsRequestDto.password()));
         userDetail.setPoints(5);
+        userDetail.setTotalPointsEarned(5); // Initial points count as earned
+        userDetail.setTotalPointsSpent(0);
 
         String referralCode;
         do {

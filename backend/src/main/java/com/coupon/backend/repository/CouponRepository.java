@@ -14,6 +14,10 @@ public interface CouponRepository extends JpaRepository<Coupon, UUID>, JpaSpecif
 
     List<Coupon> findByIsActiveTrueOrderByCreatedAtDesc();
     
+    List<Coupon> findByListedByUserId(UUID listedByUserId);
+    
+    long countByListedByUserId(UUID listedByUserId);
+    
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Coupon c WHERE UPPER(c.code) = UPPER(:code)")
     boolean existsByCodeIgnoreCase(@Param("code") String code);
     

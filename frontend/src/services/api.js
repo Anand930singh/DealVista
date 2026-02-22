@@ -157,6 +157,30 @@ export const userAPI = {
       method: "GET",
     })
   },
+
+  getUserProfile: async () => {
+    return apiRequest("/users/profile", {
+      method: "GET",
+    })
+  },
+
+  getUserStats: async () => {
+    return apiRequest("/users/stats", {
+      method: "GET",
+    })
+  },
+
+  getCouponsAdded: async () => {
+    return apiRequest("/users/coupons/added", {
+      method: "GET",
+    })
+  },
+
+  getCouponsRedeemed: async () => {
+    return apiRequest("/users/coupons/redeemed", {
+      method: "GET",
+    })
+  },
 }
 
 export default {

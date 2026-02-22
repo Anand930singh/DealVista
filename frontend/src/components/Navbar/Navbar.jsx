@@ -41,6 +41,11 @@ export function Navbar() {
               Browse Coupons
             </Link>
           )}
+          {isAuthenticated && location.pathname !== "/profile" && (
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              Profile
+            </Link>
+          )}
           {user?.role === "ADMIN" && location.pathname !== "/logs" && (
             <Link to="/logs" onClick={() => setMenuOpen(false)}>
               Logs

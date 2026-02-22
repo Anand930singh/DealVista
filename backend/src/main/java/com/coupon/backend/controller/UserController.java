@@ -61,4 +61,104 @@ public class UserController {
                     .body(Map.of("message", "Failed to fetch points: " + e.getMessage()));
         }
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@RequestHeader("Authorization") String authHeader) {
+        logger.debug("[USER] Get profile request received");
+        
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("[USER] Get profile rejected - Invalid header");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Authorization header missing or invalid"));
+            }
+
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractEmail(token);
+
+            UserDetail user = userDetailRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            return ResponseEntity.ok(userService.getUserProfile(user.getId()));
+        } catch (Exception e) {
+            logger.error("[USER] Error fetching profile: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to fetch profile: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getUserStats(@RequestHeader("Authorization") String authHeader) {
+        logger.debug("[USER] Get stats request received");
+        
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("[USER] Get stats rejected - Invalid header");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Authorization header missing or invalid"));
+            }
+
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractEmail(token);
+
+            UserDetail user = userDetailRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            return ResponseEntity.ok(userService.getUserStats(user.getId()));
+        } catch (Exception e) {
+            logger.error("[USER] Error fetching stats: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to fetch stats: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/coupons/added")
+    public ResponseEntity<?> getCouponsAdded(@RequestHeader("Authorization") String authHeader) {
+        logger.debug("[USER] Get added coupons request received");
+        
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("[USER] Get added coupons rejected - Invalid header");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Authorization header missing or invalid"));
+            }
+
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractEmail(token);
+
+            UserDetail user = userDetailRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            return ResponseEntity.ok(userService.getCouponsAddedByUser(user.getId()));
+        } catch (Exception e) {
+            logger.error("[USER] Error fetching added coupons: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to fetch added coupons: " + e.getMessage()));
+        }
+    }
+
+    @GetMapping("/coupons/redeemed")
+    public ResponseEntity<?> getCouponsRedeemed(@RequestHeader("Authorization") String authHeader) {
+        logger.debug("[USER] Get redeemed coupons request received");
+        
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("[USER] Get redeemed coupons rejected - Invalid header");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Authorization header missing or invalid"));
+            }
+
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractEmail(token);
+
+            UserDetail user = userDetailRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            return ResponseEntity.ok(userService.getCouponsRedeemedByUser(user.getId()));
+        } catch (Exception e) {
+            logger.error("[USER] Error fetching redeemed coupons: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to fetch redeemed coupons: " + e.getMessage()));
+        }
+    }
 }
