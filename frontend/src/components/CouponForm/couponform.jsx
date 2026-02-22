@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import { couponAPI, extractAPI } from "../../services/api"
+import { couponAPI, extractAPI, userAPI } from "../../services/api"
 import "./couponform.css"
 import { createWorker } from "tesseract.js"
 
@@ -269,9 +269,14 @@ export function CouponForm() {
       setSubmitSuccess(true)
       showToast("Coupon listed successfully!", "success")
       
-      // Update points in navbar
-      if (user && updatePoints) {
-        updatePoints((user.points || 0) + 5)
+      // Fetch updated points from API
+      try {
+        const response = await userAPI.getUserPoints()
+        if (response && response.points !== undefined && updatePoints) {
+          updatePoints(response.points)
+        }
+      } catch (error) {
+        // Fail silently - points will update on next refresh
       }
       
       // Reset form after successful submission

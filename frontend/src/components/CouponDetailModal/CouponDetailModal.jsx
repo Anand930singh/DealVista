@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { X, Eye, EyeOff, Copy, CheckCircle, Clock, Coins, AlertCircle, FileText, Tag, Lock, Globe, DollarSign } from "lucide-react"
-import { couponAPI } from "../../services/api"
+import { couponAPI, userAPI } from "../../services/api"
+import { useAuth } from "../../contexts/AuthContext"
 import "./coupondetailmodal.css"
 
 export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
+  const { updatePoints } = useAuth()
   const [showCode, setShowCode] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isDeductingPoints, setIsDeductingPoints] = useState(false)
@@ -32,6 +34,16 @@ export function CouponDetailModal({ coupon, isOpen, onClose, onShowToast }) {
       setShowCode(true)
       if (onShowToast) {
         onShowToast(`${coupon.redeemCost} points deducted! Coupon code revealed.`, "info")
+      }
+      
+      // Fetch updated points from API
+      try {
+        const response = await userAPI.getUserPoints()
+        if (response && response.points !== undefined && updatePoints) {
+          updatePoints(response.points)
+        }
+      } catch (error) {
+        // Fail silently - points will update on next refresh
       }
     } catch (error) {
       if (onShowToast) {

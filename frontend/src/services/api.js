@@ -150,10 +150,20 @@ export const logsAPI = {
   },
 }
 
+// User API
+export const userAPI = {
+  getUserPoints: async () => {
+    return apiRequest("/users/points", {
+      method: "GET",
+    })
+  },
+}
+
 export default {
   authAPI,
   couponAPI,
   extractAPI,
   logsAPI,
+  userAPI,
 }
 
