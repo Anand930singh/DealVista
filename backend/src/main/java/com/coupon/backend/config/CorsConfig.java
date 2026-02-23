@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class CorsConfig {
 
     private static final List<String> DEFAULT_ORIGINS = Arrays.asList(
-            "https://coupon-collector.vercel.app",
+            "https://dealvista.vercel.app",
             "http://localhost:5173",
             "http://localhost:3000",
             "http://localhost:5174",
