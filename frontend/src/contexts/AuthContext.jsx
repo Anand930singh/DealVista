@@ -1,39 +1,40 @@
 import { createContext, useContext, useState, useEffect } from "react"
+import { setUserCookie, getUserFromCookie, deleteUserCookie } from "../utils/storage"
 
 const AuthContext = createContext(null)
+
+// Set expiry duration (1 hour)
+const EXPIRY_DAYS = 1 / 24 // 1 hour in days
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check if user is logged in (from localStorage)
-    const savedUser = localStorage.getItem("user")
+    // Check if user is logged in (from cookie)
+    const savedUser = getUserFromCookie()
+    
     if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser))
-      } catch (error) {
-        localStorage.removeItem("user")
-      }
+      setUser(savedUser)
     }
     setIsLoading(false)
   }, [])
 
   const login = (userData) => {
     setUser(userData)
-    localStorage.setItem("user", JSON.stringify(userData))
+    setUserCookie(userData, EXPIRY_DAYS)
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("user")
+    deleteUserCookie()
   }
 
   const updatePoints = (newPoints) => {
     if (user) {
       const updatedUser = { ...user, points: newPoints }
       setUser(updatedUser)
-      localStorage.setItem("user", JSON.stringify(updatedUser))
+      setUserCookie(updatedUser, EXPIRY_DAYS)
     }
   }
 

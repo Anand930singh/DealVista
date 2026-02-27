@@ -1,18 +1,6 @@
-const API_BASE_URL = "https://coupon-collectoruyyf656789.onrender.com/api"
+import { getAuthToken } from "../utils/storage"
 
-// Helper function to get auth token from localStorage
-const getAuthToken = () => {
-  const user = localStorage.getItem("user")
-  if (user) {
-    try {
-      const userData = JSON.parse(user)
-      return userData.token
-    } catch (error) {
-      return null
-    }
-  }
-  return null
-}
+const API_BASE_URL = "https://coupon-collectoruyyf656789.onrender.com/api"
 
 // Helper function to make API requests
 const apiRequest = async (endpoint, options = {}) => {
