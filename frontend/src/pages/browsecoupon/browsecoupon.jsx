@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
 import { CouponDetailModal } from "../../components/CouponDetailModal/CouponDetailModal"
+import { Loader } from "../../components/Loader/Loader"
 import { useAuth } from "../../contexts/AuthContext"
 import { useToast } from "../../components/Toast/Toast"
 import { couponAPI } from "../../services/api"
@@ -431,12 +432,7 @@ export function BrowseCoupons() {
         <section className="coupons-section">
           <div className="container">
             {loading ? (
-              <div className="empty-state">
-                <div className="empty-icon">
-                  <RefreshCw size={48} className="spin" />
-                </div>
-                <h3>Loading coupons...</h3>
-              </div>
+              <Loader message="Loading coupons..." />
             ) : error ? (
               <div className="empty-state">
                 <div className="empty-icon">

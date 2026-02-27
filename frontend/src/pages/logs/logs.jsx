@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
+import { Loader } from "../../components/Loader/Loader"
 import { logsAPI } from "../../services/api"
 import { setPageMeta, SEO } from "../../services/seo"
 import { FileText, Calendar, User, AlertCircle, RefreshCw, Clock, Copy, Check } from "lucide-react"
@@ -140,8 +141,7 @@ export function Logs() {
           {/* Loading State */}
           {loading && (
             <div className="loading-state">
-              <div className="spinner"></div>
-              <p>Loading logs...</p>
+              <Loader message="Loading logs..." />
             </div>
           )}
 

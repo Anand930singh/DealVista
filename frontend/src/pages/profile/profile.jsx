@@ -3,6 +3,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { Navbar } from "../../components/Navbar/Navbar"
 import { Footer } from "../../components/Footer/Footer"
+import { Loader } from "../../components/Loader/Loader"
 import { userAPI, logsAPI } from "../../services/api"
 import { User, Mail, Calendar, Shield, TrendingUp, Gift, Activity, Clock, Package, CheckCircle, XCircle } from "lucide-react"
 import "./profile.css"
@@ -109,8 +110,7 @@ export function Profile() {
       <div className="profile-page">
         <Navbar />
         <main className="profile-loading">
-          <div className="loading-spinner"></div>
-          <p>Loading profile...</p>
+          <Loader message="Loading profile..." />
         </main>
         <Footer />
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { Gift, Menu, X, LogOut, User, Award } from "lucide-react"
+import dealVistaLogo from "../../assets/DealVista.png"
 import "./Navbar.css"
 
 export function Navbar() {
@@ -27,7 +28,7 @@ export function Navbar() {
     <header className="header">
       <div className="container header-content">
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <Gift className="logo-icon" />
+          <img src={dealVistaLogo} alt="DealVista" className="logo-icon" />
           <span>DealVista</span>
         </Link>
         <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
