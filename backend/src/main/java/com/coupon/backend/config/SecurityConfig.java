@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     auth.requestMatchers("/api/auth/**", "/auth/**").permitAll();
+                    auth.requestMatchers("/api/email/**", "/email/**").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/api/coupons/browse", "/coupons/browse").permitAll();
                     auth.requestMatchers(HttpMethod.GET, "/api/health", "/health").permitAll();
                     auth.requestMatchers("/api/logs/**", "/logs/**").hasAuthority("ADMIN");

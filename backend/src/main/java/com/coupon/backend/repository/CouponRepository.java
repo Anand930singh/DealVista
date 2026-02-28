@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,4 +23,7 @@ public interface CouponRepository extends JpaRepository<Coupon, UUID>, JpaSpecif
     boolean existsByCodeIgnoreCase(@Param("code") String code);
     
     Optional<Coupon> findByCodeIgnoreCase(String code);
+    
+    // Count coupons created between dates
+    long countByCreatedAtBetween(Instant startDate, Instant endDate);
 }
