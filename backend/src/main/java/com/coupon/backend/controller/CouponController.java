@@ -69,14 +69,15 @@ public class CouponController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String discountType,
             @RequestParam(required = false) String search,
+            @RequestParam(required = false, defaultValue = "false") boolean includeExpired,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size) {
-        logger.debug("[COUPON] Browse: active={}, platform={}, category={}, discountType={}, search={}, page={}, size={}", 
-                activeOnly, platform, category, discountType, search, page, size);
+        logger.debug("[COUPON] Browse: active={}, platform={}, category={}, discountType={}, search={}, includeExpired={}, page={}, size={}", 
+                activeOnly, platform, category, discountType, search, includeExpired, page, size);
         
         try {
             Map<String, Object> response = couponBrowseService.browseCouponsWithFilters(
-                    activeOnly, platform, category, discountType, search, page, size);
+                    activeOnly, platform, category, discountType, search, includeExpired, page, size);
             
             logger.debug("[COUPON] Retrieved page {} with {} coupons", page, 
                     ((List<?>) response.get("coupons")).size());

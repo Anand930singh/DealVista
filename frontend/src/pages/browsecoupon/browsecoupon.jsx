@@ -131,12 +131,14 @@ export function BrowseCoupons() {
     sortBy: "Latest",
     verifiedOnly: true,
     searchQuery: "",
+    includeExpired: false,
   })
   const [appliedFilters, setAppliedFilters] = useState({
     platform: "All Platforms",
     category: "All Categories",
     discountType: "All Types",
     searchQuery: "",
+    includeExpired: false,
   })
   const [pagination, setPagination] = useState({
     currentPage: 0,
@@ -156,7 +158,7 @@ export function BrowseCoupons() {
     setLoading(true)
     setError(null)
     
-    const apiFilters = { activeOnly: true, page, size: 10 }
+    const apiFilters = { activeOnly: true, page, size: 10, includeExpired: filterParams.includeExpired || false }
     
     // Only include non-empty filter values
     if (filterParams.platform && filterParams.platform !== "All Platforms") {
@@ -236,6 +238,7 @@ export function BrowseCoupons() {
       category: filters.category,
       discountType: filters.discountType,
       searchQuery: filters.searchQuery,
+      includeExpired: filters.includeExpired,
     })
     fetchCoupons(filters, 0)
   }
@@ -288,6 +291,7 @@ export function BrowseCoupons() {
       sortBy: "Latest",
       verifiedOnly: true,
       searchQuery: "",
+      includeExpired: false,
     }
     setFilters(defaultFilters)
     setAppliedFilters({
@@ -295,8 +299,9 @@ export function BrowseCoupons() {
       category: "All Categories",
       discountType: "All Types",
       searchQuery: "",
+      includeExpired: false,
     })
-    fetchCoupons({ platform: "All Platforms", category: "All Categories", discountType: "All Types", searchQuery: "" }, 0)
+    fetchCoupons({ platform: "All Platforms", category: "All Categories", discountType: "All Types", searchQuery: "", includeExpired: false }, 0)
   }
 
   // Apply frontend-only filters (verified, sort) - backend handles the rest
@@ -411,6 +416,18 @@ export function BrowseCoupons() {
                     />
                     <span className="toggle-switch"></span>
                     Verified Only
+                  </label>
+                </div>
+
+                <div className="filter-group filter-toggle-group">
+                  <label className="toggle-label">
+                    <input
+                      type="checkbox"
+                      checked={filters.includeExpired}
+                      onChange={(e) => handleFilterChange("includeExpired", e.target.checked)}
+                    />
+                    <span className="toggle-switch"></span>
+                    Include Expired
                   </label>
                 </div>
 

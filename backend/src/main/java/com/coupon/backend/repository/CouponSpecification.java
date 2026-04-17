@@ -15,13 +15,22 @@ public class CouponSpecification {
             String platform, 
             String category, 
             String discountType, 
-            String search) {
+            String search,
+            Boolean includeExpired) {
         
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (activeOnly != null && activeOnly) {
                 predicates.add(criteriaBuilder.isTrue(root.get("isActive")));
+            }
+
+            // Filter out expired coupons by default (unless includeExpired is true)
+            if (includeExpired == null || !includeExpired) {
+                predicates.add(criteriaBuilder.greaterThan(
+                    root.get("validTill"), 
+                    criteriaBuilder.currentTimestamp()
+                ));
             }
 
             if (platform != null && !platform.trim().isEmpty()) {

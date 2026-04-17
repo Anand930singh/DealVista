@@ -47,14 +47,14 @@ public class CouponBrowseService {
 
     public Map<String, Object> browseCouponsWithFilters(
             boolean activeOnly, String platform, String category, String discountType, String search,
-            int page, int size) {
+            boolean includeExpired, int page, int size) {
         
         // Create pageable with page number and size
         Pageable pageable = PageRequest.of(page, size);
         
         // Use Specification for database-level filtering with pagination
         Page<Coupon> couponPage = couponRepository.findAll(
-            CouponSpecification.filterCoupons(activeOnly, platform, category, discountType, search),
+            CouponSpecification.filterCoupons(activeOnly, platform, category, discountType, search, includeExpired),
             pageable
         );
         
